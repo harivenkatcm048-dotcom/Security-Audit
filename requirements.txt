@@ -1,0 +1,26 @@
+# ==============================================================================
+# Defensive Website Security Audit Project - Requirements
+# ==============================================================================
+# Note: The project core is designed to run seamlessly on Python 3.10+ standard library.
+# The following optional libraries enhance DNS record parsing, YAML configuration,
+# and high-performance HTTP operations when available.
+
+# Configuration file parsing
+PyYAML>=6.0.1
+
+# Extended DNS record parsing (TXT, MX, SPF, DMARC)
+dnspython>=2.6.1
+
+# HTTP request handling (safe client fallbacks to urllib.request if absent)
+requests>=2.31.0
+
+# HTML parsing enhancements (safe client fallbacks to html.parser if absent)
+beautifulsoup4>=4.12.3
+
+# Cryptography and X.509 certificate parsing enhancements
+cryptography>=42.0.5
+
+# Optional: Headless Browser Metrics & Measured Core Web Vitals (LCP, CLS, TBT, Mobile Layout)
+# Uses existing Microsoft Edge or Google Chrome on Windows without extra downloads.
+# Run: pip install playwright
+# playwright>=1.43.0

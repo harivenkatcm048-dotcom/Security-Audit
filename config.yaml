@@ -1,0 +1,168 @@
+# ==============================================================================
+# Defensive Website Security Audit Project - Configuration
+# ==============================================================================
+# This configuration governs the defensive assessment parameters, safety limits,
+# and enabled modules. All active checks are strictly constrained to authorized scope.
+
+audit:
+  # Conservative request timeouts in seconds
+  timeout_seconds: 5.0
+  
+  # Maximum requests per second to avoid target or network saturation
+  rate_limit_per_second: 5.0
+  
+  # Maximum concurrent worker threads for non-blocking checks
+  max_workers: 4
+  
+  # Maximum response body size to inspect (in bytes, default 2MB)
+  max_response_bytes: 2097152
+  
+  # User-Agent string identifying this defensive audit
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) DefensiveSecurityAudit/1.0 (Authorized Audit)"
+
+safety:
+  # Require explicit operator authorization flag (--authorized)
+  require_authorization_confirmation: true
+  
+  # Strict SSRF & private network blocking (loopback, RFC1918, link-local, cloud metadata)
+  block_private_networks: true
+  
+  # List of additional CIDR or IP blocks to strictly prohibit
+  prohibited_ip_ranges:
+    - "127.0.0.0/8"
+    - "10.0.0.0/8"
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+    - "169.254.0.0/16"      # Link-local & Cloud Metadata (169.254.169.254)
+    - "100.64.0.0/10"      # Shared carrier NAT
+    - "0.0.0.0/8"
+    - "::1/128"
+    - "fe80::/10"
+    - "fc00::/7"
+  
+  # Disallow redirects that point to different domains without authorization
+  follow_redirects: true
+  max_redirects: 3
+  allow_cross_domain_redirects: false
+
+modules:
+  domain_discovery:
+    enabled: true
+    use_crt_sh: true
+    probe_common_dns: true
+    common_subdomain_prefixes:
+      - www
+      - mail
+      - api
+      - dev
+      - staging
+      - test
+      - admin
+      - portal
+      - cdn
+      - app
+      - blog
+      - remote
+      - vpn
+      - auth
+      - status
+      - docs
+  
+  dns_analysis:
+    enabled: true
+    record_types:
+      - A
+      - AAAA
+      - CNAME
+      - MX
+      - NS
+      - TXT
+      - SOA
+    check_email_security: true # SPF, DMARC, DKIM records
+  
+  port_scanner:
+    enabled: true
+    # Strictly conservative standard service ports for authorized target only
+    ports:
+      - 80    # HTTP
+      - 443   # HTTPS
+      - 8080  # HTTP-Alt / Proxy
+      - 8443  # HTTPS-Alt
+      - 8000  # Dev HTTP
+      - 8888  # Dev Web
+      - 9000  # Web Services / SonarQube
+      - 3000  # Node / React Dev / Grafana
+      - 5000  # Flask / ASP.NET
+    socket_timeout_seconds: 1.2
+  
+  tls_audit:
+    enabled: true
+    warn_expiry_days: 30
+    check_revocation: false
+  
+  security_headers:
+    enabled: true
+    required_headers:
+      - "Strict-Transport-Security"
+      - "Content-Security-Policy"
+      - "X-Frame-Options"
+      - "X-Content-Type-Options"
+      - "Referrer-Policy"
+      - "Permissions-Policy"
+  
+  frontend_analysis:
+    enabled: true
+    extract_scripts: true
+    extract_stylesheets: true
+    extract_forms: true
+    extract_inline_scripts: true
+    analyze_cookies: true
+  
+  api_inventory:
+    enabled: true
+    probe_common_api_docs: true
+    api_doc_paths:
+      - "/openapi.json"
+      - "/swagger.json"
+      - "/api/swagger.json"
+      - "/v1/api-docs"
+      - "/api-docs"
+      - "/docs"
+  
+  technology_detection:
+    enabled: true
+  
+  cloud_indicators:
+    enabled: true
+    detect_aws: true
+    detect_cloudflare: true
+    detect_gcp: true
+    detect_azure: true
+
+  crawler:
+    enabled: true
+    max_pages: 15
+    max_depth: 2
+
+  secrets_scanner:
+    enabled: true
+    probe_config_files: true
+    scan_scripts: true
+
+  access_control_audit:
+    enabled: true
+    probe_common_admin_paths: true
+    audit_discovered_apis: true
+
+reporting:
+  output_dir: "reports"
+  formats:
+    - "json"
+    - "html"
+  redact_sensitive_data: true
+  sensitive_patterns:
+    - "(?i)(bearer\\s+[a-zA-Z0-9_\\-\\.]+)"
+    - "(?i)(api[_-]?key[=:]\\s*[a-zA-Z0-9_\\-]+)"
+    - "(?i)(token[=:]\\s*[a-zA-Z0-9_\\-]+)"
+    - "(?i)(secret[=:]\\s*[a-zA-Z0-9_\\-]+)"
+    - "(?i)(password[=:]\\s*[^&\\s]+)"

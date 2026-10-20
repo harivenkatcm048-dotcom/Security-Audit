@@ -1,0 +1,23 @@
+{
+  "name": "defensive-audit-backend",
+  "version": "1.0.0",
+  "description": "Node.js API backend for Defensive Website Security Audit Toolkit",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "mongodb": "^7.7.0"
+  },
+  "keywords": [
+    "security-audit",
+    "defensive",
+    "dashboard",
+    "nodejs"
+  ],
+  "author": "Defensive Security Team",
+  "license": "MIT"
+}

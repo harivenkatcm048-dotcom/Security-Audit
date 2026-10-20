@@ -1,0 +1,16 @@
+# ==============================================================================
+# Render Blueprint Specification for Nexentra Security Audit Backend
+# ==============================================================================
+services:
+  - type: web
+    name: nexentra-security-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        value: mongodb+srv://nexentratechnologies_db_user:mgjq5yP7T8xcIxgO@nexentra.h7bzy6i.mongodb.net/nexentra?retryWrites=true&w=majority

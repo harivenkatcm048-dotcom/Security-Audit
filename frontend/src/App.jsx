@@ -161,10 +161,10 @@ function LandingView({
             <span className="w-8 h-px bg-slate-300"></span>
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Enterprise Website Security &amp; Risk Audit
+            Website Audit by Nexentra Technologies
           </h1>
           <p className="text-base md:text-lg text-slate-500 max-w-5xl leading-relaxed">
-            Non-destructive heuristic inspection evaluating perimeter defenses, hidden API routes, SSL/TLS posture, and Core Web Vitals velocity.
+            Enterprise Security Audit of the Website &amp; Frontend Audit of the Website. Non-destructive heuristic inspection evaluating perimeter defenses, hidden API routes, SSL/TLS posture, and Core Web Vitals velocity.
           </p>
         </div>
 

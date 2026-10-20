@@ -1,7 +1,7 @@
 {
-  "name": "Nexentra Security Audit",
-  "short_name": "Nexentra",
-  "description": "Enterprise Cyber Defense & Security Telemetry Platform",
+  "name": "Website Audit by Nexentra Technologies",
+  "short_name": "Nexentra Audit",
+  "description": "Enterprise Security Audit of Website & Frontend Audit by Nexentra Technologies",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",

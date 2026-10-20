@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import BikeSpeedometerGauge from './BikeSpeedometerGauge';
 import AuditResultSummary from './AuditResultSummary';
 import FrontendAuditPanels from './FrontendAuditPanels';
@@ -619,14 +619,26 @@ export default function App() {
   useEffect(() => {
     const gsap = typeof window !== 'undefined' && window.gsap ? window.gsap : null;
     if (!gsap) return;
+    if (typeof gsap.config === 'function') {
+      gsap.config({ nullTargetWarn: false });
+    }
+
+    const safeAnimate = (selector, fromVars, toVars) => {
+      if (typeof document !== 'undefined' && selector) {
+        const els = document.querySelectorAll(selector);
+        if (els && els.length > 0) {
+          gsap.fromTo(els, fromVars, toVars);
+        }
+      }
+    };
 
     if (viewMode === 'landing') {
-      gsap.fromTo('.landing-hero', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
-      gsap.fromTo('.landing-input-card', { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, delay: 0.15, ease: 'back.out(1.3)' });
-      gsap.fromTo('.bento-card', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, delay: 0.25, ease: 'power2.out' });
+      safeAnimate('.landing-hero', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+      safeAnimate('.landing-input-card', { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, delay: 0.15, ease: 'back.out(1.3)' });
+      safeAnimate('.bento-card', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, stagger: 0.08, delay: 0.25, ease: 'power2.out' });
     } else if (viewMode === 'audit') {
-      gsap.fromTo('.overview-score-box', { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(1.4)' });
-      gsap.fromTo('.sev-counter-card', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.06, ease: 'power2.out' });
+      safeAnimate('.overview-score-box', { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(1.4)' });
+      safeAnimate('.sev-counter-card', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.06, ease: 'power2.out' });
     }
   }, [viewMode, activeReport]);
 
@@ -634,7 +646,13 @@ export default function App() {
   useEffect(() => {
     const gsap = typeof window !== 'undefined' && window.gsap ? window.gsap : null;
     if (gsap && showAuthModal) {
-      gsap.fromTo('.auth-modal-card', { opacity: 0, scale: 0.88, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)' });
+      if (typeof gsap.config === 'function') gsap.config({ nullTargetWarn: false });
+      if (typeof document !== 'undefined') {
+        const els = document.querySelectorAll('.auth-modal-card');
+        if (els && els.length > 0) {
+          gsap.fromTo(els, { opacity: 0, scale: 0.88, y: 25 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'back.out(1.6)' });
+        }
+      }
     }
   }, [showAuthModal]);
 
@@ -642,7 +660,13 @@ export default function App() {
   useEffect(() => {
     const gsap = typeof window !== 'undefined' && window.gsap ? window.gsap : null;
     if (gsap && viewMode === 'audit') {
-      gsap.fromTo('.glass-panel', { opacity: 0.85, y: 6 }, { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' });
+      if (typeof gsap.config === 'function') gsap.config({ nullTargetWarn: false });
+      if (typeof document !== 'undefined') {
+        const els = document.querySelectorAll('.glass-panel');
+        if (els && els.length > 0) {
+          gsap.fromTo(els, { opacity: 0.85, y: 6 }, { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out' });
+        }
+      }
     }
   }, [activeTab]);
 

@@ -4,6 +4,7 @@ import AuditResultSummary from './AuditResultSummary';
 import FrontendAuditPanels from './FrontendAuditPanels';
 import ApiInventoryPanel from './ApiInventoryPanel';
 import SiteFooter from './SiteFooter';
+import MobileBottomBar from './MobileBottomBar';
 import { AboutPage, PrivacyPolicyPage, TermsPage, SecurityPolicyPage } from './LegalAndInfoPages';
 import { API_BASE } from './apiConfig';
 import {
@@ -127,43 +128,43 @@ function LandingView({
   return (
     <div className="flex flex-col w-full bg-[#f8fafc] text-slate-800">
       {/* 1. MINIMAL STATUS RIBBON */}
-      <div className="w-full bg-white border-b border-slate-200 px-4 sm:px-8 lg:px-10 py-2.5 flex items-center justify-between text-xs text-slate-500 font-mono tracking-wider">
-        <div className="flex items-center gap-4">
+      <div className="w-full bg-white border-b border-slate-200 px-3 sm:px-8 lg:px-10 py-2 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 font-mono tracking-wider">
+        <div className="flex items-center gap-2 sm:gap-4">
           <button 
             type="button"
             onClick={onOpenAuthModal}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors cursor-pointer text-[11px] sm:text-xs"
             title={currentUser ? `Logged in: ${currentUser.email}` : 'Click to connect user'}
           >
             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
             <span className="font-bold uppercase">
-              {currentUser ? `ATLAS: ${currentUser.username.toUpperCase()}` : 'ATLAS VAULT: READY'}
+              {currentUser ? `ATLAS: ${currentUser.username.toUpperCase()}` : 'ATLAS: READY'}
             </span>
           </button>
           <span className="hidden sm:inline text-slate-300">|</span>
-          <span className="hidden sm:flex items-center gap-1 text-slate-600">
+          <span className="hidden md:flex items-center gap-1 text-slate-600">
             <span className="material-symbols-outlined text-sm text-slate-400">verified</span>
-            RFC 9116 PASSIVE PROTOCOL
+            RFC 9116 PASSIVE
           </span>
         </div>
-        <div className="flex items-center gap-3 text-slate-400">
-          <span>ENGINE: v4.8.2</span>
+        <div className="flex items-center gap-2 sm:gap-3 text-slate-400 text-[10px] sm:text-xs">
+          <span>v4.8.2</span>
           <span>&bull;</span>
-          <span className="text-slate-600 font-semibold">21 AUDIT STAGES</span>
+          <span className="text-slate-600 font-semibold">21 STAGES</span>
         </div>
       </div>
 
       {/* 2. ELEGANT HERO SECTION */}
-      <section className="w-full px-4 sm:px-8 lg:px-10 pt-10 pb-8 flex flex-col gap-6">
-        <div className="flex flex-col gap-3">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 font-mono tracking-widest uppercase">
+      <section className="w-full px-3.5 sm:px-8 lg:px-10 pt-6 sm:pt-10 pb-6 sm:pb-8 flex flex-col gap-4 sm:gap-6">
+        <div className="flex flex-col gap-2 sm:gap-3">
+          <div className="inline-flex items-center gap-2 text-[10px] sm:text-xs font-bold text-slate-500 font-mono tracking-widest uppercase">
             <span>// DEFENSIVE ATTACK SURFACE INTELLIGENCE</span>
-            <span className="w-8 h-px bg-slate-300"></span>
+            <span className="w-6 sm:w-8 h-px bg-slate-300"></span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
             Website Audit by Nexentra Technologies
           </h1>
-          <p className="text-base md:text-lg text-slate-500 max-w-5xl leading-relaxed">
+          <p className="text-xs sm:text-base md:text-lg text-slate-500 max-w-5xl leading-relaxed">
             Enterprise Security Audit of the Website &amp; Frontend Audit of the Website. Non-destructive heuristic inspection evaluating perimeter defenses, hidden API routes, SSL/TLS posture, and Core Web Vitals velocity.
           </p>
         </div>
@@ -181,16 +182,16 @@ function LandingView({
             }}
           >
             {/* Protocol Badge */}
-            <div className="bg-slate-50 border border-slate-200 px-4 py-3 flex items-center justify-center gap-2 text-slate-700 font-mono text-sm font-bold shrink-0">
-              <span className="material-symbols-outlined text-base text-slate-400">lock</span>
+            <div className="bg-slate-50 border border-slate-200 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-center gap-2 text-slate-700 font-mono text-xs sm:text-sm font-bold shrink-0">
+              <span className="material-symbols-outlined text-sm sm:text-base text-slate-400">lock</span>
               <span>HTTPS://</span>
             </div>
             
             {/* Target Domain Input */}
-            <div className="relative flex-1 bg-white border border-slate-200 flex items-center px-4 focus-within:border-slate-800">
+            <div className="relative flex-1 bg-white border border-slate-200 flex items-center px-3 sm:px-4 focus-within:border-slate-800">
               <input 
                 autoComplete="off" 
-                className="w-full bg-transparent text-slate-900 font-mono text-sm py-3 focus:outline-none placeholder:text-slate-400" 
+                className="w-full bg-transparent text-slate-900 font-mono text-xs sm:text-sm py-2.5 sm:py-3 focus:outline-none placeholder:text-slate-400" 
                 id="targetDomain" 
                 placeholder="domain.com (e.g. nexentra.space)" 
                 spellCheck="false" 
@@ -212,7 +213,7 @@ function LandingView({
 
             {/* Launch Button */}
             <button 
-              className={`bg-slate-900 text-white border border-slate-900 px-6 py-3 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shrink-0 cursor-pointer ${
+              className={`bg-slate-900 text-white border border-slate-900 px-5 sm:px-6 py-3 font-mono text-xs sm:text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 hover:bg-slate-800 transition-all shrink-0 cursor-pointer ${
                 isScanning ? 'opacity-80 pointer-events-none' : ''
               }`} 
               id="launchBtn" 
@@ -221,12 +222,12 @@ function LandingView({
             >
               {isScanning ? (
                 <>
-                  <span className="material-symbols-outlined text-lg animate-spin">refresh</span>
+                  <span className="material-symbols-outlined text-base sm:text-lg animate-spin">refresh</span>
                   <span>EXECUTING...</span>
                 </>
               ) : (
                 <>
-                  <span className="material-symbols-outlined text-lg text-emerald-400">bolt</span>
+                  <span className="material-symbols-outlined text-base sm:text-lg text-emerald-400">bolt</span>
                   <span>LAUNCH DEFENSIVE AUDIT</span>
                 </>
               )}
@@ -234,8 +235,8 @@ function LandingView({
           </form>
 
           {/* Quick Presets */}
-          <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 font-mono">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs text-slate-500 font-mono">
+            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
               <span className="font-semibold text-slate-400">PRESETS:</span>
               {['nexentra.space', 'speedtest.net', 'accufy.in', 'example.com'].map((domain, idx) => (
                 <React.Fragment key={domain}>
@@ -250,7 +251,7 @@ function LandingView({
                 </React.Fragment>
               ))}
             </div>
-            <div className="text-emerald-700 font-sans font-medium flex items-center gap-1.5">
+            <div className="text-emerald-700 font-sans font-medium flex items-center gap-1 text-[11px] sm:text-xs">
               <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
               <span>100% Passive &bull; Zero Exploit Injections</span>
             </div>
@@ -258,30 +259,30 @@ function LandingView({
         </div>
 
         {/* 3. 4 KEY METRIC TILES */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-          <div className="bg-white border border-slate-200 p-5 flex flex-col gap-1 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// PIPELINE_DEPTH</span>
-            <div className="text-3xl font-extrabold text-slate-900 tracking-tight">21</div>
-            <div className="text-xs font-bold text-slate-700 uppercase">Autonomous Stages</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">Automated deep pipeline from Layer 3 to Layer 7</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 mt-1">
+          <div className="bg-white border border-slate-200 p-3 sm:p-5 flex flex-col gap-1 shadow-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// PIPELINE</span>
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">21</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase">Stages</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">Layer 3 to Layer 7</div>
           </div>
-          <div className="bg-white border border-slate-200 p-5 flex flex-col gap-1 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// SAFETY_INDEX</span>
-            <div className="text-3xl font-extrabold text-emerald-600 tracking-tight">100%</div>
-            <div className="text-xs font-bold text-slate-700 uppercase">Non-Destructive</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">Zero intrusive payload injection or disruption</div>
+          <div className="bg-white border border-slate-200 p-3 sm:p-5 flex flex-col gap-1 shadow-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// SAFETY</span>
+            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">100%</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase">Passive</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">Zero intrusive payloads</div>
           </div>
-          <div className="bg-white border border-slate-200 p-5 flex flex-col gap-1 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// VELOCITY_SLA</span>
-            <div className="text-3xl font-extrabold text-blue-600 tracking-tight">&lt; 35s</div>
-            <div className="text-xs font-bold text-slate-700 uppercase">Scan SLA</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">High-speed parallel asynchronous orchestration</div>
+          <div className="bg-white border border-slate-200 p-3 sm:p-5 flex flex-col gap-1 shadow-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// VELOCITY</span>
+            <div className="text-2xl sm:text-3xl font-extrabold text-blue-600 tracking-tight">&lt; 35s</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase">Scan SLA</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">Async parallel engine</div>
           </div>
-          <div className="bg-white border border-slate-200 p-5 flex flex-col gap-1 shadow-sm">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// HEURISTIC_VECTORS</span>
-            <div className="text-3xl font-extrabold text-slate-900 tracking-tight">{allEndpointsCount > 0 ? `${allEndpointsCount}+` : '195+'}</div>
-            <div className="text-xs font-bold text-slate-700 uppercase">Discovery Routes</div>
-            <div className="text-[11px] text-slate-400 mt-0.5">Perimeter, OWASP Top 10, TLS &amp; Web Vitals</div>
+          <div className="bg-white border border-slate-200 p-3 sm:p-5 flex flex-col gap-1 shadow-sm">
+            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 font-semibold">// VECTORS</span>
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">{allEndpointsCount > 0 ? `${allEndpointsCount}+` : '195+'}</div>
+            <div className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase">Routes</div>
+            <div className="text-[10px] sm:text-[11px] text-slate-400 mt-0.5 line-clamp-1 sm:line-clamp-none">Perimeter, OWASP &amp; TLS</div>
           </div>
         </div>
       </section>
@@ -1049,22 +1050,22 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 pb-20 md:pb-0 overflow-x-hidden">
       {/* Top Navigation - Balanced Enterprise Navbar */}
       <header className="navbar">
         {/* Left: Brand Identity */}
         <div 
           className="brand-wrap" 
           onClick={() => { setViewMode('landing'); setIsMobileNavOpen(false); }} 
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }} 
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} 
           title="Return to Nexentra Home"
         >
           <div className="brand-icon" style={{ background: 'transparent', boxShadow: 'none', border: 'none', padding: 0 }}>
-            <NexentraLogo className="w-8 h-8" />
+            <NexentraLogo className="w-7 h-7 sm:w-8 sm:h-8" />
           </div>
           <div>
-            <div className="brand-title">Nexentra Technologies</div>
-            <div className="brand-tagline">Cyber Defense &amp; Intelligence</div>
+            <div className="brand-title font-bold text-sm sm:text-base leading-tight">Nexentra Technologies</div>
+            <div className="brand-tagline hidden sm:block text-[11px] text-slate-400">Cyber Defense &amp; Intelligence</div>
           </div>
         </div>
 
@@ -1107,8 +1108,8 @@ export default function App() {
               <div className="nav-member-avatar">
                 {currentUser.username ? currentUser.username[0].toUpperCase() : 'U'}
               </div>
-              <span className="font-semibold text-slate-700">{currentUser.username}</span>
-              <span className="text-xs text-sky-600 font-bold ml-1">SWITCH</span>
+              <span className="font-semibold text-slate-700 hidden sm:inline">{currentUser.username}</span>
+              <span className="text-xs text-sky-600 font-bold ml-1 hidden sm:inline">SWITCH</span>
             </button>
           ) : (
             <button 
@@ -1118,13 +1119,13 @@ export default function App() {
               title="Identify your team member account to record audit telemetry"
             >
               <User className="w-3.5 h-3.5 text-slate-500" />
-              <span>Identify Member</span>
+              <span className="hidden sm:inline">Identify Member</span>
             </button>
           )}
 
           <button 
             type="button"
-            className="nav-cta-btn" 
+            className="nav-cta-btn hidden md:inline-flex" 
             onClick={handleNewScanClick}
             title="Start or queue a new defensive security audit"
           >
@@ -2496,6 +2497,16 @@ export default function App() {
 
       {/* Redesigned Universal Site Footer */}
       <SiteFooter onNavigatePage={handleNavigatePage} />
+
+      {/* Native App-Style Mobile Bottom Navigation Bar */}
+      <MobileBottomBar
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        onNewScan={handleNewScanClick}
+        onOpenAuth={() => setShowAuthModal(true)}
+        hasActiveReport={Boolean(activeReport)}
+        currentUser={currentUser}
+      />
     </div>
   );
 }

@@ -20,19 +20,19 @@ import {
  */
 function PageHeader({ title, subtitle, onBack }) {
   return (
-    <div style={{ marginBottom: '32px', borderBottom: '1px solid #e2e8f0', paddingBottom: '24px' }}>
+    <div style={{ marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '18px' }}>
       <button
         onClick={onBack}
         className="chip-btn"
-        style={{ marginBottom: '18px', borderRadius: '0px', fontWeight: 700 }}
+        style={{ marginBottom: '14px', borderRadius: '0px', fontWeight: 700 }}
       >
         <ArrowLeft className="w-4 h-4 mr-1.5" />
         <span>Return to Security Engine</span>
       </button>
-      <h1 style={{ fontSize: '2.2rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '8px' }}>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '8px' }}>
         {title}
       </h1>
-      <p style={{ color: '#64748b', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: '780px' }}>
+      <p style={{ color: '#64748b', fontSize: '0.98rem', lineHeight: 1.6, maxWidth: '780px' }}>
         {subtitle}
       </p>
     </div>
@@ -44,7 +44,7 @@ function PageHeader({ title, subtitle, onBack }) {
  */
 export function AboutPage({ onBack }) {
   return (
-    <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', padding: '36px 40px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
       <PageHeader
         title="About Nexentra Technologies"
         subtitle="Empowering engineering teams, CISOs, and web operators with automated, zero-false-positive defensive web audits and full-spectrum perimeter discovery."
@@ -144,7 +144,7 @@ export function AboutPage({ onBack }) {
  */
 export function PrivacyPolicyPage({ onBack }) {
   return (
-    <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', padding: '36px 40px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
       <PageHeader
         title="Privacy & Data Protection Policy"
         subtitle="Last revised: October 2026 • Nexentra Technologies (nexentra.space)"
@@ -211,9 +211,9 @@ export function PrivacyPolicyPage({ onBack }) {
  */
 export function TermsPage({ onBack }) {
   return (
-    <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', padding: '36px 40px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
       <PageHeader
-        title="Terms of Service & Authorized Usage"
+        title="Terms of Service &amp; Authorized Usage"
         subtitle="Last revised: October 2026 • Nexentra Technologies (nexentra.space)"
         onBack={onBack}
       />
@@ -230,7 +230,7 @@ export function TermsPage({ onBack }) {
 
         <section style={{ marginBottom: '28px' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            2. Authorization & Ethical Usage Mandate
+            2. Authorization &amp; Ethical Usage Mandate
           </h2>
           <p>
             The Nexentra Security Audit Engine is designed solely for defensive, ethical security configuration verification. You expressly warrant and agree that:
@@ -275,7 +275,7 @@ export function TermsPage({ onBack }) {
  */
 export function SecurityPolicyPage({ onBack }) {
   return (
-    <div className="glass-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', padding: '36px 40px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
       <PageHeader
         title="Responsible Disclosure & Security Policy"
         subtitle="Nexentra Technologies Security Vulnerability Reporting Program • nexentra.space"

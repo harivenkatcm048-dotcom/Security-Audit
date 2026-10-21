@@ -5,19 +5,19 @@ import {
   FileText, 
   ShieldAlert, 
   Zap, 
-  Search, 
   Layers, 
-  CheckCircle, 
+  CheckCircle2, 
   ArrowUpRight, 
   Copy, 
   Check, 
   Clock, 
-  AlertTriangle 
+  AlertTriangle,
+  ArrowRight
 } from 'lucide-react';
 
 /**
  * AuditResultSummary Component
- * Sharp-cornered, high-contrast, responsive executive summary.
+ * Minimal, executive, ultra-responsive security & performance summary.
  */
 export default function AuditResultSummary({
   report,
@@ -39,10 +39,9 @@ export default function AuditResultSummary({
 
   const highRisks = (report.findings || []).filter(f => f.severity === 'HIGH' || f.severity === 'CRITICAL').length;
   const totalFindings = (report.findings || []).length;
-  const totalPages = (webQuality?.pages_matrix || []).length || (report.modules?.crawler?.total_pages_crawled || 1);
   const ttfb = webQuality?.performance?.ttfb_ms || 140;
 
-  // Gather top prioritized fixes from security and web quality
+  // Gather top prioritized fixes
   const allOptimizations = webQuality?.all_optimizations || [
     ...(webQuality?.performance?.optimizations || []),
     ...(webQuality?.seo?.optimizations || []),
@@ -50,7 +49,6 @@ export default function AuditResultSummary({
   ];
 
   const topPriorityItems = [];
-  // Add critical/high security issues first
   (report.findings || []).filter(f => f.severity === 'HIGH' || f.severity === 'CRITICAL').slice(0, 3).forEach(f => {
     topPriorityItems.push({
       category: 'Security Risk',
@@ -62,8 +60,7 @@ export default function AuditResultSummary({
     });
   });
 
-  // Add high/medium web quality optimizations
-  allOptimizations.filter(o => o.impact === 'HIGH' || o.impact === 'MEDIUM').slice(0, 5 - topPriorityItems.length).forEach(o => {
+  allOptimizations.filter(o => o.impact === 'HIGH' || o.impact === 'MEDIUM').slice(0, 4 - topPriorityItems.length).forEach(o => {
     topPriorityItems.push({
       category: o.category || 'Web Quality',
       impact: o.impact,
@@ -82,197 +79,180 @@ export default function AuditResultSummary({
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '24px 26px', marginBottom: '22px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff' }}>
+    <div className="w-full bg-white border border-slate-200 rounded-xl p-4 sm:p-6 mb-6 shadow-sm">
       {/* Top Banner */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ background: '#fef3c7', border: '1px solid #fde68a', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Trophy style={{ width: '24px', height: '24px', color: '#d97706' }} />
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
+            <Trophy className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-              Audit Report: <span style={{ fontFamily: 'monospace', color: '#0284c7' }}>{report.metadata?.target_host || 'Target System'}</span>
-            </h2>
-            <p style={{ color: '#64748b', fontSize: '0.86rem', marginTop: '4px', marginBottom: 0 }}>
-              Defensive security posture, OWASP findings, Core Web Vitals, SEO health, and API topology verified.
+            <div className="flex items-center gap-2 flex-wrap">
+              <h2 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">
+                Audit Executive Summary
+              </h2>
+              <span className="font-mono text-xs font-bold text-sky-700 bg-sky-50 border border-sky-200 px-2 py-0.5 rounded">
+                {report.metadata?.target_host || 'Target System'}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Verified perimeter telemetry across 21 automated diagnostic stages.
             </p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+        <div className="flex items-center gap-2">
           {onDownloadJson && (
-            <button type="button" className="chip-btn" onClick={onDownloadJson} style={{ borderRadius: '0px', padding: '6px 14px', fontSize: '0.82rem', fontWeight: 700 }}>
-              <Download style={{ width: '14px', height: '14px', marginRight: '6px', color: '#0284c7' }} />
-              <span>Export JSON</span>
+            <button 
+              type="button" 
+              onClick={onDownloadJson}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-sky-600" />
+              <span>JSON</span>
             </button>
           )}
           {onDownloadPdf && (
-            <button type="button" className="chip-btn" onClick={onDownloadPdf} style={{ borderRadius: '0px', padding: '6px 14px', fontSize: '0.82rem', fontWeight: 700 }}>
-              <FileText style={{ width: '14px', height: '14px', marginRight: '6px', color: '#d97706' }} />
-              <span>Export PDF</span>
+            <button 
+              type="button" 
+              onClick={onDownloadPdf}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
+            >
+              <FileText className="w-3.5 h-3.5 text-amber-600" />
+              <span>PDF</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Pillar Scores Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '10px', marginBottom: '20px' }}>
-        {/* Security Pillar */}
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '14px 16px', borderRadius: '0px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Security Posture</span>
-            <span style={{ padding: '2px 6px', background: '#eff6ff', color: '#1d4ed8', fontSize: '0.74rem', fontWeight: 800, border: '1px solid #bfdbfe' }}>Grade {grade}</span>
+      {/* 5-Metric Pillar Scores */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 my-5">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+            <span>Security</span>
+            <span className="text-emerald-700 font-extrabold bg-emerald-100 px-1.5 py-0.2 rounded text-[10px]">
+              Grade {grade}
+            </span>
           </div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: securityScore >= 80 ? '#15803d' : '#b45309', fontFamily: 'monospace', marginTop: '4px' }}>
-            {securityScore}<span style={{ fontSize: '0.9rem', color: '#64748b' }}>/100</span>
+          <div className="text-xl sm:text-2xl font-black font-mono text-slate-900">
+            {securityScore}<span className="text-xs text-slate-400 font-sans font-normal">/100</span>
           </div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>OWASP & Config Posture</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">OWASP &amp; Headers</div>
         </div>
 
-        {/* Performance Pillar */}
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '14px 16px', borderRadius: '0px' }}>
-          <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>Page Speed & Vitals</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: perfScore >= 80 ? '#15803d' : '#b45309', fontFamily: 'monospace', marginTop: '4px' }}>
-            {perfScore}<span style={{ fontSize: '0.9rem', color: '#64748b' }}>/100</span>
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Speed &amp; Vitals</div>
+          <div className="text-xl sm:text-2xl font-black font-mono text-slate-900">
+            {perfScore}<span className="text-xs text-slate-400 font-sans font-normal">/100</span>
           </div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>TTFB {ttfb}ms • LCP / CLS</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">TTFB {ttfb}ms</div>
         </div>
 
-        {/* SEO Pillar */}
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '14px 16px', borderRadius: '0px' }}>
-          <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>SEO & Social Graph</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: seoScore >= 80 ? '#15803d' : '#b45309', fontFamily: 'monospace', marginTop: '4px' }}>
-            {seoScore}<span style={{ fontSize: '0.9rem', color: '#64748b' }}>/100</span>
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">SEO Health</div>
+          <div className="text-xl sm:text-2xl font-black font-mono text-slate-900">
+            {seoScore}<span className="text-xs text-slate-400 font-sans font-normal">/100</span>
           </div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>Search Index & Schema</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">Social &amp; SERP</div>
         </div>
 
-        {/* UI/UX Pillar */}
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '14px 16px', borderRadius: '0px' }}>
-          <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>UI, UX & Access</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: uiScore >= 80 ? '#15803d' : '#0284c7', fontFamily: 'monospace', marginTop: '4px' }}>
-            {uiScore}<span style={{ fontSize: '0.9rem', color: '#64748b' }}>/100</span>
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">UI/UX &amp; Access</div>
+          <div className="text-xl sm:text-2xl font-black font-mono text-slate-900">
+            {uiScore}<span className="text-xs text-slate-400 font-sans font-normal">/100</span>
           </div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>WCAG 2.1 & Viewport</div>
+          <div className="text-[10px] text-slate-400 mt-0.5">WCAG 2.1 AAA</div>
         </div>
 
-        {/* Overall Web Health */}
-        <div style={{ background: '#eff6ff', border: '1px solid #bfdbfe', padding: '14px 16px', borderRadius: '0px' }}>
-          <span style={{ fontSize: '0.74rem', color: '#1d4ed8', fontWeight: 800, textTransform: 'uppercase' }}>Overall Composite</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#1d4ed8', fontFamily: 'monospace', marginTop: '4px' }}>
-            {overallScore}<span style={{ fontSize: '0.9rem', color: '#60a5fa' }}>/100</span>
+        <div className="col-span-2 sm:col-span-1 bg-sky-50 border border-sky-200 rounded-lg p-3">
+          <div className="text-[11px] font-bold text-sky-800 uppercase tracking-wider mb-1">Composite</div>
+          <div className="text-xl sm:text-2xl font-black font-mono text-sky-900">
+            {overallScore}<span className="text-xs text-sky-500 font-sans font-normal">/100</span>
           </div>
-          <div style={{ fontSize: '0.74rem', color: '#1d4ed8', marginTop: '2px' }}>Composite 4-Pillar Score</div>
+          <div className="text-[10px] text-sky-700 mt-0.5">Weighted Total</div>
         </div>
       </div>
 
-      {/* Quick KPIs Strip */}
-      <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', padding: '10px 14px', background: '#f8fafc', border: '1px solid #cbd5e1', marginBottom: '20px', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem' }}>
-          <ShieldAlert style={{ width: '15px', height: '15px', color: highRisks > 0 ? '#dc2626' : '#15803d' }} />
-          <span style={{ color: '#64748b' }}>High/Critical Risks:</span>
-          <strong style={{ color: highRisks > 0 ? '#b91c1c' : '#15803d', fontFamily: 'monospace' }}>{highRisks}</strong>
+      {/* Quick KPI Strip */}
+      <div className="flex flex-wrap items-center gap-3 sm:gap-6 py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono text-slate-600 mb-5">
+        <div className="flex items-center gap-1.5">
+          <ShieldAlert className={`w-3.5 h-3.5 ${highRisks > 0 ? 'text-red-500' : 'text-emerald-500'}`} />
+          <span>High Risks: <strong className={highRisks > 0 ? 'text-red-600' : 'text-emerald-600'}>{highRisks}</strong></span>
         </div>
-        <div style={{ color: '#cbd5e1' }}>•</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem' }}>
-          <Layers style={{ width: '15px', height: '15px', color: '#64748b' }} />
-          <span style={{ color: '#64748b' }}>Security Findings:</span>
-          <strong style={{ color: '#0f172a', fontFamily: 'monospace' }}>{totalFindings}</strong>
+        <span>&bull;</span>
+        <div className="flex items-center gap-1.5">
+          <Layers className="w-3.5 h-3.5 text-slate-400" />
+          <span>Total Findings: <strong className="text-slate-900">{totalFindings}</strong></span>
         </div>
-        <div style={{ color: '#cbd5e1' }}>•</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem' }}>
-          <Clock style={{ width: '15px', height: '15px', color: ttfb < 400 ? '#15803d' : '#d97706' }} />
-          <span style={{ color: '#64748b' }}>TTFB Latency:</span>
-          <strong style={{ color: ttfb < 400 ? '#15803d' : '#b45309', fontFamily: 'monospace' }}>{ttfb} ms</strong>
+        <span>&bull;</span>
+        <div className="flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 text-amber-500" />
+          <span>TTFB: <strong className="text-slate-900">{ttfb} ms</strong></span>
         </div>
-        <div style={{ color: '#cbd5e1' }}>•</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem' }}>
-          <Zap style={{ width: '15px', height: '15px', color: '#059669' }} />
-          <span style={{ color: '#64748b' }}>Identified Improvements:</span>
-          <strong style={{ color: '#059669', fontFamily: 'monospace' }}>{allOptimizations.length}</strong>
+        <span>&bull;</span>
+        <div className="flex items-center gap-1.5">
+          <Zap className="w-3.5 h-3.5 text-emerald-500" />
+          <span>Actionable Fixes: <strong className="text-emerald-700">{allOptimizations.length}</strong></span>
         </div>
       </div>
 
-      {/* Top Priority Action Items */}
+      {/* Top Priority Items */}
       {topPriorityItems.length > 0 && (
-        <div style={{ border: '1px solid #cbd5e1', padding: '16px 18px', background: '#f8fafc' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-            <Zap style={{ width: '17px', height: '17px', color: '#d97706' }} />
-            <h3 style={{ margin: 0, fontSize: '0.98rem', fontWeight: 800, color: '#0f172a' }}>Top High-Impact Priority Fixes</h3>
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+            <Zap className="w-3.5 h-3.5 text-amber-500" />
+            <span>Top High-Impact Remediation Items</span>
           </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {topPriorityItems.map((item, idx) => (
-              <div key={idx} style={{ background: '#ffffff', border: '1px solid #cbd5e1', padding: '12px 14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '6px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                    <span 
-                      style={{ 
-                        fontSize: '0.72rem', 
-                        fontWeight: 800, 
-                        padding: '2px 6px', 
-                        background: item.impact === 'CRITICAL' || item.impact === 'HIGH' ? '#fef2f2' : '#fefce8', 
-                        color: item.impact === 'CRITICAL' || item.impact === 'HIGH' ? '#b91c1c' : '#a16207', 
-                        border: `1px solid ${item.impact === 'CRITICAL' || item.impact === 'HIGH' ? '#fecaca' : '#fef08a'}`
-                      }}
-                    >
-                      {item.impact}
-                    </span>
-                    <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 600 }}>{item.category}</span>
-                    <strong style={{ color: '#0f172a', fontSize: '0.88rem' }}>{item.title}</strong>
-                  </div>
-                  {onNavigateTab && (
-                    <button 
-                      type="button" 
-                      onClick={() => onNavigateTab(item.tab)}
-                      style={{ 
-                        color: '#0284c7', 
-                        background: 'none', 
-                        border: 'none', 
-                        cursor: 'pointer', 
-                        fontSize: '0.78rem', 
-                        fontWeight: 700, 
-                        display: 'inline-flex', 
-                        alignItems: 'center', 
-                        gap: '2px' 
-                      }}
-                    >
-                      <span>Jump to Tab</span>
-                      <ArrowUpRight style={{ width: '13px', height: '13px' }} />
-                    </button>
-                  )}
+          {topPriorityItems.map((item, idx) => (
+            <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 hover:border-slate-300 transition-colors">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded font-mono ${
+                    item.impact === 'CRITICAL' || item.impact === 'HIGH'
+                      ? 'bg-red-100 text-red-700 border border-red-200'
+                      : 'bg-amber-100 text-amber-700 border border-amber-200'
+                  }`}>
+                    {item.impact}
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-400 font-semibold">{item.category}</span>
+                  <strong className="text-xs sm:text-sm text-slate-900 font-bold">{item.title}</strong>
                 </div>
-                <p style={{ color: '#475569', fontSize: '0.82rem', margin: '4px 0 8px 0', lineHeight: 1.4 }}>{item.description}</p>
-                {item.remediation && (
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '8px 10px', position: 'relative' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                      <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700 }}>REMEDIATION / FIX:</span>
-                      <button 
-                        type="button" 
-                        onClick={() => handleCopyCode(item.remediation, idx)}
-                        style={{ background: 'none', border: 'none', color: '#0284c7', cursor: 'pointer', fontSize: '0.72rem', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px' }}
-                      >
-                        {copiedIndex === idx ? (
-                          <>
-                            <Check style={{ width: '11px', height: '11px', color: '#15803d' }} />
-                            <span>Copied</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy style={{ width: '11px', height: '11px' }} />
-                            <span>Copy Code</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    <code style={{ fontSize: '0.76rem', color: '#0f172a', display: 'block', wordBreak: 'break-all', fontFamily: 'monospace' }}>
-                      {item.remediation.slice(0, 220)}{item.remediation.length > 220 ? '...' : ''}
-                    </code>
-                  </div>
+                {onNavigateTab && (
+                  <button 
+                    type="button" 
+                    onClick={() => onNavigateTab(item.tab)}
+                    className="text-xs font-bold text-sky-600 hover:text-sky-800 transition-colors inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Inspect</span>
+                    <ArrowUpRight className="w-3 h-3" />
+                  </button>
                 )}
               </div>
-            ))}
-          </div>
+              <p className="text-xs text-slate-600 leading-relaxed">{item.description}</p>
+              {item.remediation && (
+                <div className="mt-2 bg-white border border-slate-200 rounded p-2 text-xs font-mono flex items-center justify-between gap-2">
+                  <span className="text-slate-700 truncate">{item.remediation}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleCopyCode(item.remediation, idx)}
+                    className="shrink-0 text-[11px] text-sky-600 hover:text-sky-800 font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    {copiedIndex === idx ? (
+                      <>
+                        <Check className="w-3 h-3 text-emerald-600" />
+                        <span className="text-emerald-600">Copied</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -12,27 +12,37 @@ import {
   AlertTriangle,
   Zap,
   Layers,
-  Server
+  Server,
+  Eye,
+  Terminal,
+  Cpu,
+  Check
 } from 'lucide-react';
 
 /**
- * Common Header for Legal & Informational Pages
+ * Common Minimal Header for Legal & Informational Pages
  */
-function PageHeader({ title, subtitle, onBack }) {
+function PageHeader({ title, subtitle, badge = "OFFICIAL SPECIFICATION", onBack }) {
   return (
-    <div style={{ marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '18px' }}>
-      <button
-        onClick={onBack}
-        className="chip-btn"
-        style={{ marginBottom: '14px', borderRadius: '0px', fontWeight: 700 }}
-      >
-        <ArrowLeft className="w-4 h-4 mr-1.5" />
-        <span>Return to Security Engine</span>
-      </button>
-      <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.2rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.02em', marginBottom: '8px' }}>
+    <div className="mb-6 pb-5 border-b border-slate-200">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <button
+          onClick={onBack}
+          type="button"
+          className="inline-flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-all rounded-lg shadow-sm cursor-pointer"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
+          <span>Back to Engine</span>
+        </button>
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-mono font-bold uppercase tracking-wider text-sky-700 bg-sky-50 border border-sky-200 rounded-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse"></span>
+          <span>{badge}</span>
+        </div>
+      </div>
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
         {title}
       </h1>
-      <p style={{ color: '#64748b', fontSize: '0.98rem', lineHeight: 1.6, maxWidth: '780px' }}>
+      <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl leading-relaxed">
         {subtitle}
       </p>
     </div>
@@ -40,292 +50,287 @@ function PageHeader({ title, subtitle, onBack }) {
 }
 
 /**
- * About Us Page Component
+ * About Us Page Component - Clean, Minimal Bento Grid
  */
 export function AboutPage({ onBack }) {
   return (
-    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="w-full max-w-5xl mx-auto bg-white border border-slate-200 rounded-xl p-5 sm:p-8 shadow-sm my-4">
       <PageHeader
         title="About Nexentra Technologies"
-        subtitle="Empowering engineering teams, CISOs, and web operators with automated, zero-false-positive defensive web audits and full-spectrum perimeter discovery."
+        subtitle="Automated, zero-false-positive defensive web audits, API route discovery, and performance intelligence."
+        badge="NEXENTRA CORE v4.8"
         onBack={onBack}
       />
 
-      <div style={{ color: '#334155', fontSize: '0.96rem', lineHeight: 1.8 }}>
-        <section style={{ marginBottom: '36px' }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
-            Our Mission & Origin
-          </h2>
-          <p style={{ marginBottom: '14px' }}>
-            Nexentra Technologies (<a href="https://nexentra.space" target="_blank" rel="noreferrer" style={{ color: '#0284c7', fontWeight: 700, textDecoration: 'none' }}>nexentra.space ↗</a>) was founded on a simple premise: modern web applications are too dynamic and distributed for conventional, slow, intrusive penetration testing to remain the sole line of defense.
-          </p>
-          <p>
-            Between micro-frontends, single-page applications (SPAs), third-party CDN scripts, and proliferating REST API endpoints, organizations routinely expose sensitive routes, unauthenticated administrative portals, and critical configuration oversights without knowing it. Nexentra bridges this gap through real-time, non-destructive telemetry that executes in seconds.
-          </p>
-        </section>
-
-        <section style={{ marginBottom: '36px' }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
-            The Four Pillars of Nexentra Engine
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginTop: '16px' }}>
-            <div style={{ border: '1px solid #e2e8f0', padding: '20px', background: '#f8fafc' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#0284c7', fontWeight: 800, marginBottom: '6px' }}>
-                <ShieldCheck className="w-5 h-5" />
-                <span>1. Zero-False-Positive Security</span>
-              </div>
-              <p style={{ fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
-                Every vulnerability flag is verified with raw cryptographic, header, or HTTP handshake evidence. No speculative alerts.
-              </p>
-            </div>
-
-            <div style={{ border: '1px solid #e2e8f0', padding: '20px', background: '#f8fafc' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#15803d', fontWeight: 800, marginBottom: '6px' }}>
-                <Layers className="w-5 h-5" />
-                <span>2. 100% Route & API Discovery</span>
-              </div>
-              <p style={{ fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
-                Abstract syntax tree (AST) crawlers extract client-side SPA routes and backend REST APIs directly from compiled JavaScript bundles.
-              </p>
-            </div>
-
-            <div style={{ border: '1px solid #e2e8f0', padding: '20px', background: '#f8fafc' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#d97706', fontWeight: 800, marginBottom: '6px' }}>
-                <Zap className="w-5 h-5" />
-                <span>3. Real-World Performance & UX</span>
-              </div>
-              <p style={{ fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
-                Integrated Time to First Byte (TTFB), simulated Core Web Vitals (LCP, CLS, INP), and automated compression diagnostics.
-              </p>
-            </div>
-
-            <div style={{ border: '1px solid #e2e8f0', padding: '20px', background: '#f8fafc' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#4f46e5', fontWeight: 800, marginBottom: '6px' }}>
-                <Lock className="w-5 h-5" />
-                <span>4. Safe & Non-Destructive</span>
-              </div>
-              <p style={{ fontSize: '0.88rem', color: '#64748b', margin: 0 }}>
-                Strict read-only heuristics with automated SSRF firewalls and RFC 1918 private IP protections to prevent any production disruption.
-              </p>
-            </div>
+      {/* Mission Banner */}
+      <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 sm:p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div className="text-xs font-mono font-bold text-sky-600 uppercase tracking-wider mb-1">MISSION STATEMENT</div>
+          <div className="text-base sm:text-lg font-bold text-slate-900">
+            Real-time, non-destructive perimeter defense for modern web applications.
           </div>
-        </section>
-
-        <section style={{ marginBottom: '36px' }}>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '12px' }}>
-            Corporate & Technical Standards
-          </h2>
-          <p style={{ marginBottom: '12px' }}>
-            Nexentra Technologies operates in strict alignment with international open standards, including:
+          <p className="text-xs text-slate-500 mt-1">
+            Portal: <a href="https://nexentra.space" target="_blank" rel="noreferrer" className="text-sky-600 font-semibold hover:underline">nexentra.space ↗</a> &bull; Engineered for DevOps, Security Teams, and Modern Web Architects.
           </p>
-          <ul style={{ paddingLeft: '22px', marginBottom: '16px' }}>
-            <li><strong>OWASP Top 10:2021</strong>: Complete alignment with modern web vulnerability categories (A01 through A10).</li>
-            <li><strong>W3C / WHATWG Standards</strong>: Full conformance to HTML5 semantics, Content Security Policy Level 3, and WCAG 2.1 AAA accessibility rules.</li>
-            <li><strong>RFC 9116 / RFC 8446</strong>: Security.txt disclosure and TLS 1.3 cryptographic suites verification.</li>
-          </ul>
-        </section>
+        </div>
+        <button
+          onClick={onBack}
+          type="button"
+          className="shrink-0 px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg hover:bg-slate-800 transition-all shadow-sm flex items-center gap-1.5"
+        >
+          <Zap className="w-3.5 h-3.5 text-yellow-400" />
+          <span>Launch Audit</span>
+        </button>
+      </div>
 
-        <section style={{ borderTop: '1px solid #e2e8f0', paddingTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div style={{ fontWeight: 800, color: '#0f172a' }}>Nexentra Technologies</div>
-            <div style={{ color: '#64748b', fontSize: '0.88rem' }}>Portal: <a href="https://nexentra.space" target="_blank" rel="noreferrer" style={{ color: '#0284c7' }}>nexentra.space</a> &bull; Inquiries: <a href="mailto:contact@nexentra.space" style={{ color: '#0284c7' }}>contact@nexentra.space</a></div>
+      {/* 4 Pillars Bento Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
+        <div className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
+          <div className="flex items-center gap-2 text-sky-600 font-bold text-sm mb-1.5">
+            <ShieldCheck className="w-4 h-4" />
+            <span>1. Zero-False-Positive Security</span>
           </div>
-          <button onClick={onBack} className="chip-btn" style={{ borderRadius: '0px', background: '#0284c7', color: '#ffffff', fontWeight: 800 }}>
-            Launch an Audit Now &rarr;
-          </button>
-        </section>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Every vulnerability alert is validated with cryptographic proofs, HTTP handshakes, or raw header evidence. Zero speculation.
+          </p>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
+          <div className="flex items-center gap-2 text-emerald-600 font-bold text-sm mb-1.5">
+            <Layers className="w-4 h-4" />
+            <span>2. AST Route &amp; API Discovery</span>
+          </div>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            AST parsers decompile compiled frontend bundles to uncover shadow REST endpoints, GraphQL schemas, and SPA route maps.
+          </p>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
+          <div className="flex items-center gap-2 text-amber-600 font-bold text-sm mb-1.5">
+            <Zap className="w-4 h-4" />
+            <span>3. Real-World Speed &amp; Vitals</span>
+          </div>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Benchmarking Time to First Byte (TTFB), Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and compression efficiency.
+          </p>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors">
+          <div className="flex items-center gap-2 text-indigo-600 font-bold text-sm mb-1.5">
+            <Lock className="w-4 h-4" />
+            <span>4. Non-Destructive Passive Probing</span>
+          </div>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Strict read-only heuristics with automated SSRF firewalls and RFC 1918 private IP protection to ensure zero production risk.
+          </p>
+        </div>
+      </div>
+
+      {/* Compliance & Standards Strip */}
+      <div className="border-t border-slate-200 pt-5 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500 font-mono">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="font-bold text-slate-700">STANDARDS:</span>
+          <span className="px-2 py-0.5 bg-slate-100 rounded text-slate-600">OWASP Top 10</span>
+          <span className="px-2 py-0.5 bg-slate-100 rounded text-slate-600">RFC 9116 (security.txt)</span>
+          <span className="px-2 py-0.5 bg-slate-100 rounded text-slate-600">TLS 1.3 / RFC 8446</span>
+          <span className="px-2 py-0.5 bg-slate-100 rounded text-slate-600">WCAG 2.1 AAA</span>
+        </div>
+        <div className="flex items-center gap-2 text-slate-400">
+          <span>Inquiries:</span>
+          <a href="mailto:contact@nexentra.space" className="text-sky-600 hover:underline">contact@nexentra.space</a>
+        </div>
       </div>
     </div>
   );
 }
 
 /**
- * Privacy Policy Page Component
+ * Privacy Policy Page Component - Clean, Minimal Bento Grid
  */
 export function PrivacyPolicyPage({ onBack }) {
   return (
-    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="w-full max-w-5xl mx-auto bg-white border border-slate-200 rounded-xl p-5 sm:p-8 shadow-sm my-4">
       <PageHeader
-        title="Privacy & Data Protection Policy"
+        title="Privacy &amp; Data Isolation Policy"
         subtitle="Last revised: October 2026 • Nexentra Technologies (nexentra.space)"
+        badge="ZERO-DATA-LEAKAGE"
         onBack={onBack}
       />
 
-      <div style={{ color: '#334155', fontSize: '0.94rem', lineHeight: 1.8 }}>
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            1. Overview & Commitment
-          </h2>
-          <p>
-            Nexentra Technologies ("Nexentra", "we", "our") values the privacy of its users, corporate members, and the confidentiality of defensive audit findings. This Privacy Policy details how we handle audit target information, member session credentials, and generated security reports across our platform.
-          </p>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            2. Information We Process
-          </h2>
-          <ul style={{ paddingLeft: '22px' }}>
-            <li><strong>Target Host Information</strong>: Domain names, URLs, public IP addresses, and DNS records submitted for analysis.</li>
-            <li><strong>Member Account Data</strong>: Email address and username provided to isolate your historical audit archives in our encrypted MongoDB Atlas repository.</li>
-            <li><strong>Audit Findings & Telemetry</strong>: HTTP response headers, SSL/TLS certificates, public Certificate Transparency records, and discovered client-side routes.</li>
-            <li><strong>Authentication Secrets (Optional)</strong>: If you provide temporary session tokens or cookies to test protected routes, they are processed in volatile memory only and are never persisted or shared.</li>
-          </ul>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            3. Strict Non-Disclosure & Data Isolation
-          </h2>
-          <p>
-            We adhere to a strict zero-leakage policy:
-          </p>
-          <ul style={{ paddingLeft: '22px' }}>
-            <li>We <strong>never sell, trade, or publicly disclose</strong> your audit reports, target hosts, or identified vulnerability findings.</li>
-            <li>Historical audits saved in MongoDB Atlas are member-scoped to the initiating auditor’s email address.</li>
-            <li>All target traffic originates solely from our security audit engine and mimics standard read-only browser clients.</li>
-          </ul>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            4. Data Retention & Deletion
-          </h2>
-          <p>
-            You retain full ownership of your audit history. You may download complete JSON and CSV archives of any assessment at any time. To request complete deletion of your account record and historical audit files from MongoDB Atlas, email <a href="mailto:privacy@nexentra.space" style={{ color: '#0284c7' }}>privacy@nexentra.space</a>.
-          </p>
-        </section>
-
-        <section style={{ borderTop: '1px solid #e2e8f0', paddingTop: '20px' }}>
-          <div style={{ color: '#64748b', fontSize: '0.85rem' }}>
-            Nexentra Technologies &bull; Powered by <a href="https://nexentra.space" target="_blank" rel="noreferrer" style={{ color: '#0284c7' }}>nexentra.space</a> &bull; Privacy Officer: <a href="mailto:privacy@nexentra.space" style={{ color: '#0284c7' }}>privacy@nexentra.space</a>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <Globe className="w-4 h-4 text-sky-600" />
+            <span>Target Data Processed</span>
           </div>
-        </section>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Public domain names, URLs, DNS records, public SSL/TLS certificates, and HTTP response headers. All queries mirror standard web client behavior.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <Lock className="w-4 h-4 text-emerald-600" />
+            <span>Member Scoped Isolation</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Audit archives stored in MongoDB Atlas are strictly scoped to the initiating member's account. Reports are private and never indexed or shared.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <Terminal className="w-4 h-4 text-indigo-600" />
+            <span>Volatile Memory Credentials</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Optional session cookies or authorization tokens provided for authenticated scanning exist only in volatile RAM during execution and are never persisted.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <CheckCircle2 className="w-4 h-4 text-amber-600" />
+            <span>Right to Erasure</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Full data sovereignty: Export your audit history in JSON or CSV at any time, or request instant purge via <a href="mailto:privacy@nexentra.space" className="text-sky-600 hover:underline">privacy@nexentra.space</a>.
+          </p>
+        </div>
+      </div>
+
+      <div className="border-t border-slate-200 pt-4 flex items-center justify-between text-xs text-slate-500 font-mono">
+        <span>Nexentra Technologies &bull; nexentra.space</span>
+        <a href="mailto:privacy@nexentra.space" className="text-sky-600 hover:underline">privacy@nexentra.space</a>
       </div>
     </div>
   );
 }
 
 /**
- * Terms of Service Page Component
+ * Terms of Service Page Component - Clean, Minimal Bento Grid
  */
 export function TermsPage({ onBack }) {
   return (
-    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="w-full max-w-5xl mx-auto bg-white border border-slate-200 rounded-xl p-5 sm:p-8 shadow-sm my-4">
       <PageHeader
-        title="Terms of Service &amp; Authorized Usage"
+        title="Terms of Service &amp; Usage"
         subtitle="Last revised: October 2026 • Nexentra Technologies (nexentra.space)"
+        badge="AUTHORIZED USAGE ONLY"
         onBack={onBack}
       />
 
-      <div style={{ color: '#334155', fontSize: '0.94rem', lineHeight: 1.8 }}>
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            1. Agreement to Terms
-          </h2>
-          <p>
-            By accessing or executing defensive security assessments through the Nexentra Security Audit Engine, provided by Nexentra Technologies (nexentra.space), you agree to be legally bound by these Terms of Service. If you do not agree, do not utilize this platform.
-          </p>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            2. Authorization &amp; Ethical Usage Mandate
-          </h2>
-          <p>
-            The Nexentra Security Audit Engine is designed solely for defensive, ethical security configuration verification. You expressly warrant and agree that:
-          </p>
-          <ul style={{ paddingLeft: '22px' }}>
-            <li>You own, operate, or possess explicit authorization from the legitimate owner to audit the submitted domain or web application.</li>
-            <li>You will not utilize Nexentra for unauthorized vulnerability exploitation, malicious reconnaissance, denial-of-service, or harassment.</li>
-            <li>You will abide by all local, state, federal, and international cyber legislation (e.g. CFAA, Computer Misuse Act).</li>
-          </ul>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            3. Non-Destructive Scanning Guarantee
-          </h2>
-          <p>
-            Nexentra conducts read-only HTTP/HTTPS requests, public DNS lookups, Certificate Transparency log parsing, and client bundle static analysis. The engine does NOT execute intrusive exploit payloads, database injection, or brute-force password attacks.
-          </p>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            4. Limitation of Liability
-          </h2>
-          <p>
-            All assessments are provided on an "as-is" and "as-available" basis. While Nexentra employs zero-false-positive heuristics, we do not warrant that our automated scans constitute a guarantee against zero-day exploits or security breaches. Nexentra Technologies shall not be liable for any indirect, consequential, or punitive damages.
-          </p>
-        </section>
-
-        <section style={{ borderTop: '1px solid #e2e8f0', paddingTop: '20px' }}>
-          <div style={{ color: '#64748b', fontSize: '0.85rem' }}>
-            Nexentra Technologies &bull; Powered by <a href="https://nexentra.space" target="_blank" rel="noreferrer" style={{ color: '#0284c7' }}>nexentra.space</a> &bull; Legal Inquiries: <a href="mailto:legal@nexentra.space" style={{ color: '#0284c7' }}>legal@nexentra.space</a>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>1. Authorized Auditing Only</span>
           </div>
-        </section>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Users must own, operate, or hold explicit authorization to audit the submitted domain or infrastructure. Unauthorized reconnaissance is strictly prohibited.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <Lock className="w-4 h-4 text-sky-600" />
+            <span>2. 100% Non-Destructive Scanning</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Nexentra conducts passive inspection only. The engine does NOT execute exploit payloads, SQL injections, brute-force attacks, or service disruptions.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <FileText className="w-4 h-4 text-indigo-600" />
+            <span>3. Legal Compliance</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            You agree to abide by all local, national, and international cybersecurity regulations, including the Computer Fraud and Abuse Act (CFAA) and international counterparts.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <AlertTriangle className="w-4 h-4 text-amber-600" />
+            <span>4. Diagnostic As-Is Guarantee</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Assessments provide high-fidelity heuristic telemetry but do not replace comprehensive human penetration testing. Nexentra provides reports on an "as-is" basis.
+          </p>
+        </div>
+      </div>
+
+      <div className="border-t border-slate-200 pt-4 flex items-center justify-between text-xs text-slate-500 font-mono">
+        <span>Nexentra Technologies &bull; nexentra.space</span>
+        <a href="mailto:legal@nexentra.space" className="text-sky-600 hover:underline">legal@nexentra.space</a>
       </div>
     </div>
   );
 }
 
 /**
- * Security & Responsible Disclosure Page Component
+ * Security & Responsible Disclosure Page Component - Clean, Minimal Bento Grid
  */
 export function SecurityPolicyPage({ onBack }) {
   return (
-    <div className="glass-panel legal-page-panel" style={{ width: '100%', maxWidth: '100%', margin: '0 0 60px', borderRadius: '0px', border: '1px solid #cbd5e1', background: '#ffffff', boxSizing: 'border-box' }}>
+    <div className="w-full max-w-5xl mx-auto bg-white border border-slate-200 rounded-xl p-5 sm:p-8 shadow-sm my-4">
       <PageHeader
-        title="Responsible Disclosure & Security Policy"
+        title="Responsible Disclosure &amp; Security"
         subtitle="Nexentra Technologies Security Vulnerability Reporting Program • nexentra.space"
+        badge="RFC 9116 ACTIVE"
         onBack={onBack}
       />
 
-      <div style={{ color: '#334155', fontSize: '0.94rem', lineHeight: 1.8 }}>
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            1. Our Security Commitment
-          </h2>
-          <p>
-            As a cybersecurity platform, the security and resilience of our systems and our users' data is our highest priority. We welcome responsible security researchers and ethical hackers to review our infrastructure and report potential issues.
-          </p>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            2. Safe Harbor for Security Researchers
-          </h2>
-          <p>
-            Nexentra will not initiate legal action against security researchers who conduct good-faith research that conforms to this policy:
-          </p>
-          <ul style={{ paddingLeft: '22px' }}>
-            <li>Promptly notify us at <a href="mailto:security@nexentra.space" style={{ color: '#0284c7' }}>security@nexentra.space</a> upon discovering a suspected vulnerability.</li>
-            <li>Allow us a reasonable timeframe (typically 30–90 days) to remediate the issue before public disclosure.</li>
-            <li>Do not view, alter, or exfiltrate private audit reports belonging to other members.</li>
-            <li>Do not execute denial of service (DoS/DDoS) or degradation attacks against our services.</li>
-          </ul>
-        </section>
-
-        <section style={{ marginBottom: '28px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-            3. Reporting a Vulnerability
-          </h2>
-          <div style={{ border: '1px solid #cbd5e1', padding: '18px 24px', background: '#f8fafc', marginBottom: '14px' }}>
-            <p style={{ margin: 0, fontWeight: 700, color: '#0f172a' }}>
-              Direct Contact: <a href="mailto:security@nexentra.space" style={{ color: '#0284c7' }}>security@nexentra.space</a>
-            </p>
-            <p style={{ margin: '6px 0 0', fontSize: '0.86rem', color: '#64748b' }}>
-              Please include: Proof of concept (PoC) steps, affected endpoint/component, and recommended remediation.
-            </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-8">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>Safe Harbor Guarantee</span>
           </div>
-        </section>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            We pledge not to pursue legal action against ethical researchers who discover and report potential vulnerabilities in good faith and in compliance with this policy.
+          </p>
+        </div>
 
-        <section style={{ borderTop: '1px solid #e2e8f0', paddingTop: '20px' }}>
-          <div style={{ color: '#64748b', fontSize: '0.85rem' }}>
-            Nexentra Technologies &bull; Powered by <a href="https://nexentra.space" target="_blank" rel="noreferrer" style={{ color: '#0284c7' }}>nexentra.space</a> &bull; RFC 9116 security.txt active
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <Mail className="w-4 h-4 text-sky-600" />
+            <span>Direct Vulnerability Contact</span>
           </div>
-        </section>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Report security findings directly to <a href="mailto:security@nexentra.space" className="text-sky-600 font-semibold hover:underline">security@nexentra.space</a> with reproduction steps, affected endpoints, and impact assessment.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <Eye className="w-4 h-4 text-indigo-600" />
+            <span>Privacy Boundaries</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            Never attempt to view, alter, or exfiltrate private audit reports belonging to other members. Stop testing immediately upon confirming a potential vulnerability.
+          </p>
+        </div>
+
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="flex items-center gap-2 text-slate-900 font-bold text-sm mb-1.5">
+            <CheckCircle2 className="w-4 h-4 text-amber-600" />
+            <span>30-Day Remediation Window</span>
+          </div>
+          <p className="text-xs text-slate-600 leading-relaxed">
+            We request a reasonable 30-day window to evaluate, patch, and deploy fixes before public disclosure or publication.
+          </p>
+        </div>
+      </div>
+
+      <div className="border-t border-slate-200 pt-4 flex items-center justify-between text-xs text-slate-500 font-mono">
+        <span>Nexentra Technologies &bull; nexentra.space</span>
+        <span className="text-emerald-700 font-bold flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          RFC 9116 / .well-known/security.txt
+        </span>
       </div>
     </div>
   );

@@ -99,90 +99,68 @@ export function getEndpointSubgroup(ep, targetHost = '') {
 }
 
 /**
- * Method badge with sharp corners
+ * Method badge with clean styling
  */
 export function MethodBadge({ method }) {
   const m = (method || 'GET').toUpperCase();
-  let bg = '#eff6ff';
-  let color = '#1d4ed8';
-  let border = '#bfdbfe';
+  let cls = 'bg-sky-50 text-sky-700 border-sky-200';
 
   if (m === 'POST') {
-    bg = '#f0fdf4';
-    color = '#15803d';
-    border = '#bbf7d0';
+    cls = 'bg-emerald-50 text-emerald-700 border-emerald-200';
   } else if (m === 'PUT' || m === 'PATCH') {
-    bg = '#fefce8';
-    color = '#a16207';
-    border = '#fef08a';
+    cls = 'bg-amber-50 text-amber-700 border-amber-200';
   } else if (m === 'DELETE') {
-    bg = '#fef2f2';
-    color = '#b91c1c';
-    border = '#fecaca';
+    cls = 'bg-red-50 text-red-700 border-red-200';
   }
 
   return (
-    <span
-      style={{
-        display: 'inline-block',
-        padding: '3px 8px',
-        borderRadius: '0px',
-        fontSize: '0.74rem',
-        fontWeight: 800,
-        fontFamily: 'monospace',
-        background: bg,
-        color: color,
-        border: `1px solid ${border}`,
-        marginRight: '6px',
-        letterSpacing: '0.5px'
-      }}
-    >
+    <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-mono font-bold border mr-1.5 ${cls}`}>
       {m}
     </span>
   );
 }
 
 /**
- * Access State Badge with sharp corners
+ * Access State Badge
  */
 export function AccessStateBadge({ state }) {
   if (!state || state === 'PENDING_AUDIT') {
     return (
-      <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '0px', background: '#f8fafc', color: '#64748b', fontWeight: 600, border: '1px solid #e2e8f0' }}>
+      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-50 text-slate-500 border border-slate-200">
         UNPROBED
       </span>
     );
   }
   if (state === 'RESTRICTED_VERIFIED_AUTH') {
     return (
-      <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '0px', background: '#f0fdf4', color: '#166534', fontWeight: 700, border: '1px solid #bbf7d0' }} title="Protected: Requires authorization">
+      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200" title="Protected: Requires authorization">
         🛡️ VERIFIED AUTH
       </span>
     );
   }
   if (state === 'RESTRICTED_AUTH_REQUIRED') {
     return (
-      <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '0px', background: '#f5f3ff', color: '#6b21a8', fontWeight: 700, border: '1px solid #ddd6fe' }} title="Requires authentication credentials">
+      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-purple-50 text-purple-700 border border-purple-200" title="Requires authentication credentials">
         🔒 RESTRICTED (401/403)
       </span>
     );
   }
   if (state === 'PUBLIC_ACCESSIBLE') {
     return (
-      <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '0px', background: '#eff6ff', color: '#0369a1', fontWeight: 700, border: '1px solid #bae6fd' }} title="Publicly accessible endpoint">
+      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-sky-50 text-sky-700 border border-sky-200" title="Publicly accessible endpoint">
         🌐 PUBLIC (200)
       </span>
     );
   }
   if (state === 'METHOD_NOT_ALLOWED') {
     return (
-      <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '0px', background: '#fefce8', color: '#92400e', fontWeight: 700, border: '1px solid #fde68a' }} title="HTTP 405 Method Not Allowed">
+      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-200" title="HTTP 405 Method Not Allowed">
         ⚠️ METHOD 405
       </span>
     );
   }
   return (
-    <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '0px', background: '#f8fafc', color: '#475569', fontWeight: 600, border: '1px solid #e2e8f0' }}>
+    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-slate-50 text-slate-600 border border-slate-200">
       {state}
     </span>
   );
@@ -205,7 +183,6 @@ function getCategoryIcon(subgroup = '') {
 
 /**
  * Main API Inventory Panel Component
- * Completely dynamic, robustly handling all Frontend and Backend endpoints.
  */
 export default function ApiInventoryPanel({
   allEndpoints = [],
@@ -233,7 +210,7 @@ export default function ApiInventoryPanel({
     });
   }, [allEndpoints, targetHost]);
 
-  // Extract all unique subgroups dynamically from the actual endpoints
+  // Extract all unique subgroups dynamically
   const dynamicSubgroups = useMemo(() => {
     const map = new Map();
     endpointsWithMeta.forEach(ep => {
@@ -259,28 +236,23 @@ export default function ApiInventoryPanel({
   // Filtered Endpoints
   const filteredEndpoints = useMemo(() => {
     return endpointsWithMeta.filter(ep => {
-      // 1. Primary Filter Chip
       if (apiCategoryFilter === 'BACKEND' && ep.isFrontend) return false;
       if (apiCategoryFilter === 'FRONTEND' && !ep.isFrontend) return false;
       if (apiCategoryFilter === 'PUBLIC' && ep.access_state !== 'PUBLIC_ACCESSIBLE') return false;
       if (apiCategoryFilter === 'RESTRICTED' && !ep.access_state?.includes('RESTRICTED')) return false;
 
-      // 2. Subgroup Filter Dropdown
       if (selectedSubgroup !== 'ALL' && ep.resolvedSubgroup !== selectedSubgroup) {
         return false;
       }
 
-      // 3. Search query
       if (apiSearchTerm && apiSearchTerm.trim()) {
         const term = apiSearchTerm.toLowerCase().trim();
         const pathMatch = ep.path && ep.path.toLowerCase().includes(term);
         const urlMatch = ep.full_url && ep.full_url.toLowerCase().includes(term);
         const summaryMatch = ep.summary && ep.summary.toLowerCase().includes(term);
-        const sourceMatch = ep.source && ep.source.toLowerCase().includes(term);
         const sgMatch = ep.resolvedSubgroup && ep.resolvedSubgroup.toLowerCase().includes(term);
         const methodMatch = ep.methods && ep.methods.some(m => m.toLowerCase().includes(term));
-        const paramMatch = ep.parameters && ep.parameters.some(p => p.toLowerCase().includes(term));
-        if (!pathMatch && !urlMatch && !summaryMatch && !sourceMatch && !sgMatch && !methodMatch && !paramMatch) {
+        if (!pathMatch && !urlMatch && !summaryMatch && !sgMatch && !methodMatch) {
           return false;
         }
       }
@@ -338,319 +310,204 @@ export default function ApiInventoryPanel({
   };
 
   return (
-    <div className="glass-panel" style={{ padding: '24px 26px', background: '#ffffff', borderRadius: '0px', border: '1px solid #cbd5e1', boxShadow: 'none' }}>
+    <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-6">
       {/* Top Header Row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', flexWrap: 'wrap', gap: '14px' }}>
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.4rem' }}>🛰️</span>
-            <h3 style={{ margin: 0, color: '#0f172a', fontWeight: 800, fontSize: '1.3rem' }}>
-              API Inventory & Complete Route Topology
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🛰️</span>
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-900">
+              API Inventory &amp; Route Topology
             </h3>
           </div>
-          <p style={{ color: '#64748b', fontSize: '0.88rem', marginTop: '6px', marginBottom: 0, maxWidth: '820px', lineHeight: 1.5 }}>
-            Comprehensive catalog of <strong>Backend REST APIs ({backendCount})</strong> and <strong>Frontend Client SPA Routes ({frontendCount})</strong> discovered across JavaScript bundles, HTML DOM forms, OpenAPI specs, and network traces.
+          <p className="text-xs text-slate-500 mt-0.5">
+            Discovered <strong>{backendCount} Backend APIs</strong> and <strong>{frontendCount} Client SPA Routes</strong> across JavaScript bundles.
           </p>
         </div>
 
         {/* View Mode & Export Actions */}
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', background: '#f1f5f9', border: '1px solid #cbd5e1', borderRadius: '0px', padding: '2px' }}>
+        <div className="flex items-center gap-2 flex-wrap">
+          <div className="inline-flex bg-slate-100 p-0.5 rounded-lg border border-slate-200">
             <button
+              type="button"
               onClick={() => setViewMode('blueprint')}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '0px',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: 'none',
-                background: viewMode === 'blueprint' ? '#0284c7' : 'transparent',
-                color: viewMode === 'blueprint' ? '#ffffff' : '#475569',
-                transition: 'all 0.15s ease'
-              }}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+                viewMode === 'blueprint' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
             >
-              📑 Categorized Blueprint
+              Blueprint
             </button>
             <button
+              type="button"
               onClick={() => setViewMode('table')}
-              style={{
-                padding: '6px 14px',
-                borderRadius: '0px',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                border: 'none',
-                background: viewMode === 'table' ? '#0284c7' : 'transparent',
-                color: viewMode === 'table' ? '#ffffff' : '#475569',
-                transition: 'all 0.15s ease'
-              }}
+              className={`px-3 py-1 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+                viewMode === 'table' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
             >
-              📊 Full Data Table
+              Table View
             </button>
           </div>
 
           <button
+            type="button"
             onClick={handleExportJson}
-            className="chip-btn"
-            style={{ borderRadius: '0px', padding: '6px 12px', fontSize: '0.8rem', fontWeight: 700 }}
-            title="Download JSON dataset"
+            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
           >
-            <Download style={{ width: '13px', height: '13px', marginRight: '5px' }} />
-            JSON
+            <Download className="w-3.5 h-3.5 text-sky-600" />
+            <span>JSON</span>
           </button>
           <button
+            type="button"
             onClick={handleExportCsv}
-            className="chip-btn"
-            style={{ borderRadius: '0px', padding: '6px 12px', fontSize: '0.8rem', fontWeight: 700 }}
-            title="Download CSV spreadsheet"
+            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg transition-colors cursor-pointer"
           >
-            <Download style={{ width: '13px', height: '13px', marginRight: '5px' }} />
-            CSV
+            <Download className="w-3.5 h-3.5 text-sky-600" />
+            <span>CSV</span>
           </button>
         </div>
       </div>
 
-      {/* Metric Cards Banner - 100% Sharp Corners */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '10px', marginBottom: '20px' }}>
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '0px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Total Endpoints</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0284c7', marginTop: '2px', fontFamily: 'monospace' }}>{totalCount}</div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>Frontend + Backend</div>
+      {/* Metric Cards Banner */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Total Endpoints</span>
+          <div className="text-xl sm:text-2xl font-black font-mono text-sky-700 mt-0.5">{totalCount}</div>
+          <span className="text-[10px] text-slate-400 block">Frontend + Backend</span>
         </div>
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '0px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Backend REST APIs</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#059669', marginTop: '2px', fontFamily: 'monospace' }}>{backendCount}</div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>Server-side controllers</div>
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Backend APIs</span>
+          <div className="text-xl sm:text-2xl font-black font-mono text-emerald-700 mt-0.5">{backendCount}</div>
+          <span className="text-[10px] text-slate-400 block">REST &amp; RPC services</span>
         </div>
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '0px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Frontend SPA Routes</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#6366f1', marginTop: '2px', fontFamily: 'monospace' }}>{frontendCount}</div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>Client views & pages</div>
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">SPA Routes</span>
+          <div className="text-xl sm:text-2xl font-black font-mono text-indigo-700 mt-0.5">{frontendCount}</div>
+          <span className="text-[10px] text-slate-400 block">Client navigation</span>
         </div>
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '0px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Public Accessible</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0284c7', marginTop: '2px', fontFamily: 'monospace' }}>{publicCount}</div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>Unauthenticated (200)</div>
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Public (200)</span>
+          <div className="text-xl sm:text-2xl font-black font-mono text-sky-600 mt-0.5">{publicCount}</div>
+          <span className="text-[10px] text-slate-400 block">Unauthenticated</span>
         </div>
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '0px', padding: '12px 14px' }}>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Auth Restricted</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#7c3aed', marginTop: '2px', fontFamily: 'monospace' }}>{restrictedCount}</div>
-          <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>Protected (401/403)</div>
+        <div className="col-span-2 sm:col-span-1 bg-slate-50 border border-slate-200 rounded-lg p-3">
+          <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">Auth Restricted</span>
+          <div className="text-xl sm:text-2xl font-black font-mono text-purple-700 mt-0.5">{restrictedCount}</div>
+          <span className="text-[10px] text-slate-400 block">Protected (401/403)</span>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
         {/* Category Filter Chips */}
-        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div className="flex items-center gap-1.5 flex-wrap text-xs">
           {[
             { key: 'ALL', label: `All (${totalCount})` },
-            { key: 'BACKEND', label: `Backend APIs (${backendCount})` },
-            { key: 'FRONTEND', label: `Frontend Routes (${frontendCount})` },
+            { key: 'BACKEND', label: `Backend (${backendCount})` },
+            { key: 'FRONTEND', label: `Frontend (${frontendCount})` },
             { key: 'PUBLIC', label: `Public (${publicCount})` },
-            { key: 'RESTRICTED', label: `Restricted (${restrictedCount})` }
-          ].map(f => (
+            { key: 'RESTRICTED', label: `Auth (${restrictedCount})` }
+          ].map(chip => (
             <button
-              key={f.key}
-              onClick={() => setApiCategoryFilter(f.key)}
-              style={{
-                background: apiCategoryFilter === f.key ? '#0284c7' : '#f1f5f9',
-                color: apiCategoryFilter === f.key ? '#ffffff' : '#334155',
-                border: `1px solid ${apiCategoryFilter === f.key ? '#0284c7' : '#cbd5e1'}`,
-                borderRadius: '0px',
-                padding: '6px 12px',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
+              key={chip.key}
+              type="button"
+              onClick={() => setApiCategoryFilter(chip.key)}
+              className={`px-2.5 py-1 rounded font-mono font-bold transition-colors cursor-pointer ${
+                apiCategoryFilter === chip.key
+                  ? 'bg-slate-900 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
             >
-              {f.label}
+              {chip.label}
             </button>
           ))}
-
-          {/* Subgroup Dropdown Selector */}
-          <select
-            value={selectedSubgroup}
-            onChange={(e) => setSelectedSubgroup(e.target.value)}
-            style={{
-              padding: '6px 10px',
-              borderRadius: '0px',
-              border: '1px solid #cbd5e1',
-              background: '#ffffff',
-              color: '#0f172a',
-              fontSize: '0.78rem',
-              fontWeight: 600,
-              outline: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            <option value="ALL">All Functional Domains ({dynamicSubgroups.length})</option>
-            {dynamicSubgroups.map(sg => (
-              <option key={sg.title} value={sg.title}>
-                {sg.icon} {sg.title} ({sg.count})
-              </option>
-            ))}
-          </select>
         </div>
 
         {/* Search Input */}
-        <div style={{ position: 'relative', minWidth: '260px', flexGrow: 1, maxWidth: '420px' }}>
+        <div className="relative min-w-[200px] flex-1 sm:max-w-xs">
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
           <input
             type="text"
-            placeholder="Search path, method, param, keyword..."
+            placeholder="Search endpoint path..."
             value={apiSearchTerm}
             onChange={e => setApiSearchTerm(e.target.value)}
-            style={{
-              width: '100%',
-              background: '#ffffff',
-              border: '1px solid #cbd5e1',
-              borderRadius: '0px',
-              padding: '7px 12px 7px 32px',
-              fontSize: '0.84rem',
-              outline: 'none',
-              color: '#0f172a'
-            }}
+            className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-8 pr-3 py-1 text-xs text-slate-900 focus:outline-none focus:border-slate-800"
           />
-          <Search style={{ position: 'absolute', left: '10px', top: '9px', width: '15px', height: '15px', color: '#94a3b8', pointerEvents: 'none' }} />
         </div>
       </div>
 
-      {/* Active Filter Notice */}
-      {(apiCategoryFilter !== 'ALL' || selectedSubgroup !== 'ALL' || apiSearchTerm) && (
-        <div style={{ background: '#f8fafc', border: '1px solid #cbd5e1', padding: '8px 12px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8rem', color: '#475569' }}>
-          <div>
-            Showing <strong>{filteredEndpoints.length}</strong> matching endpoints
-            {selectedSubgroup !== 'ALL' && <span> under <strong>{selectedSubgroup}</strong></span>}
-            {apiCategoryFilter !== 'ALL' && <span> filtered by <strong>{apiCategoryFilter}</strong></span>}
-            {apiSearchTerm && <span> matching <strong>"{apiSearchTerm}"</strong></span>}
-          </div>
-          <button
-            onClick={() => { setApiCategoryFilter('ALL'); setSelectedSubgroup('ALL'); setApiSearchTerm(''); }}
-            style={{ color: '#0284c7', background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '0.78rem' }}
-          >
-            Clear Filters
-          </button>
-        </div>
-      )}
-
-      {/* VIEW MODE 1: Dynamic Categorized Blueprint View */}
+      {/* VIEW MODE 1: Blueprint Accordion / Groups */}
       {viewMode === 'blueprint' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <div className="space-y-4">
           {groupedBlueprint.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#94a3b8', border: '1px dashed #cbd5e1' }}>
-              No endpoints match the selected filter criteria.
+            <div className="p-8 text-center text-slate-400 bg-slate-50 border border-slate-200 rounded-lg text-xs">
+              No endpoints matching your filter criteria.
             </div>
           ) : (
-            groupedBlueprint.map(([groupTitle, endpoints]) => (
-              <div 
-                key={groupTitle} 
-                style={{ 
-                  background: '#ffffff', 
-                  border: '1px solid #cbd5e1', 
-                  borderRadius: '0px', 
-                  overflow: 'hidden'
-                }}
-              >
-                {/* Section Header */}
-                <div style={{ 
-                  background: '#f8fafc', 
-                  padding: '12px 18px', 
-                  borderBottom: '1px solid #cbd5e1', 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '8px'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '1.2rem' }}>{getCategoryIcon(groupTitle)}</span>
-                    <strong style={{ color: '#0f172a', fontSize: '0.96rem' }}>{groupTitle}</strong>
+            groupedBlueprint.map(([subgroupName, items]) => (
+              <div key={subgroupName} className="border border-slate-200 rounded-lg overflow-hidden">
+                <div className="bg-slate-50 px-4 py-2.5 border-b border-slate-200 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span>{getCategoryIcon(subgroupName)}</span>
+                    <strong className="text-xs sm:text-sm text-slate-900">{subgroupName}</strong>
+                    <span className="text-[11px] font-mono font-bold text-slate-500 bg-white border border-slate-200 px-1.5 py-0.2 rounded">
+                      {items.length}
+                    </span>
                   </div>
-                  <span 
-                    style={{ 
-                      fontSize: '0.74rem', 
-                      fontWeight: 800, 
-                      padding: '3px 8px', 
-                      background: '#eff6ff', 
-                      color: '#0369a1', 
-                      border: '1px solid #bae6fd',
-                      borderRadius: '0px'
-                    }}
-                  >
-                    {endpoints.length} endpoint{endpoints.length !== 1 ? 's' : ''}
-                  </span>
                 </div>
 
-                {/* Table for this group */}
-                <div style={{ maxHeight: '520px', overflowY: 'auto', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-                  <table className="audit-table" style={{ margin: 0, width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                      <tr>
-                        <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '90px' }}>Method</th>
-                        <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>Path / URL</th>
-                        <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '140px' }}>Type</th>
-                        <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '160px' }}>Auth Posture</th>
-                        <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>Description / Parameters</th>
-                        <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '180px' }}>Source Trace</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {endpoints.map((ep, idx) => (
-                        <tr key={idx} style={{ background: idx % 2 === 0 ? '#ffffff' : '#fafbfc' }}>
-                          <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>
+                {/* Mobile-Optimized List Layout */}
+                <div className="block sm:hidden divide-y divide-slate-100 font-mono">
+                  {items.map((ep, idx) => (
+                    <div key={idx} className="p-3 hover:bg-slate-50/80 transition-colors">
+                      <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {(ep.methods || ['GET']).map(m => (
+                            <MethodBadge key={m} method={m} />
+                          ))}
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                            ep.isFrontend ? 'bg-indigo-50 text-indigo-700' : 'bg-emerald-50 text-emerald-700'
+                          }`}>
+                            {ep.isFrontend ? 'FRONTEND' : 'BACKEND'}
+                          </span>
+                        </div>
+                        <AccessStateBadge state={ep.access_state} />
+                      </div>
+                      <div className="text-xs font-semibold text-slate-900 break-words select-all font-mono leading-relaxed">
+                        {ep.path}
+                      </div>
+                      {ep.summary && (
+                        <div className="text-[11px] font-sans text-slate-500 mt-1">{ep.summary}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop & Tablet Table View */}
+                <div className="hidden sm:block overflow-x-auto">
+                  <table className="w-full text-left text-xs border-collapse min-w-[500px]">
+                    <tbody className="divide-y divide-slate-100 font-mono">
+                      {items.map((ep, idx) => (
+                        <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                          <td className="py-2.5 px-3 w-20">
                             {(ep.methods || ['GET']).map(m => (
                               <MethodBadge key={m} method={m} />
                             ))}
                           </td>
-                          <td style={{ verticalAlign: 'middle' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                              <strong style={{ color: ep.isFrontend ? '#3730a3' : '#0369a1', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.86rem', wordBreak: 'break-all' }}>
-                                {ep.path}
-                              </strong>
-                              {ep.full_url && ep.full_url !== ep.path && (
-                                <a href={ep.full_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.74rem', color: '#64748b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                                  <span>{ep.full_url}</span>
-                                  <ExternalLink style={{ width: '11px', height: '11px', flexShrink: 0 }} />
-                                </a>
-                              )}
-                            </div>
-                          </td>
-                          <td style={{ verticalAlign: 'middle' }}>
-                            <span 
-                              style={{ 
-                                display: 'inline-block',
-                                padding: '3px 8px',
-                                fontSize: '0.72rem',
-                                fontWeight: 800,
-                                fontFamily: "'JetBrains Mono', monospace",
-                                letterSpacing: '0.04em',
-                                background: ep.isFrontend ? '#eef2ff' : '#ecfdf5',
-                                color: ep.isFrontend ? '#3730a3' : '#065f46',
-                                border: `1px solid ${ep.isFrontend ? '#c7d2fe' : '#a7f3d0'}`,
-                                borderRadius: '0px'
-                              }}
-                            >
-                              {ep.isFrontend ? 'FRONTEND ROUTE' : 'BACKEND API'}
-                            </span>
-                          </td>
-                          <td style={{ verticalAlign: 'middle' }}>
-                            <AccessStateBadge state={ep.access_state} />
-                          </td>
-                          <td style={{ verticalAlign: 'middle' }}>
-                            <div style={{ color: '#1e293b', fontSize: '0.84rem' }}>
-                              {ep.summary || (ep.isFrontend ? 'Client application route' : 'API service endpoint')}
-                            </div>
-                            {ep.parameters && ep.parameters.length > 0 && (
-                              <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '3px' }}>
-                                <strong>Params:</strong> <code style={{ background: '#f1f5f9', padding: '1px 4px', border: '1px solid #e2e8f0' }}>{ep.parameters.join(', ')}</code>
-                              </div>
+                          <td className="py-2.5 px-3">
+                            <span className="font-semibold text-slate-900 break-all">{ep.path}</span>
+                            {ep.summary && (
+                              <div className="text-[11px] font-sans text-slate-500 mt-0.5">{ep.summary}</div>
                             )}
                           </td>
-                          <td style={{ verticalAlign: 'middle', color: '#64748b', fontSize: '0.76rem' }}>
-                            <code style={{ background: '#f8fafc', padding: '2px 4px', border: '1px solid #e2e8f0' }}>
-                              {ep.source || 'Script Inspection'}
-                            </code>
+                          <td className="py-2.5 px-3 w-32">
+                            <AccessStateBadge state={ep.access_state} />
+                          </td>
+                          <td className="py-2.5 px-3 w-28 text-right">
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                              ep.isFrontend ? 'bg-indigo-50 text-indigo-700' : 'bg-emerald-50 text-emerald-700'
+                            }`}>
+                              {ep.isFrontend ? 'FRONTEND' : 'BACKEND'}
+                            </span>
                           </td>
                         </tr>
                       ))}
@@ -663,101 +520,45 @@ export default function ApiInventoryPanel({
         </div>
       )}
 
-      {/* VIEW MODE 2: Flat Full Data Table View */}
+      {/* VIEW MODE 2: Full Data Table */}
       {viewMode === 'table' && (
-        <div style={{ maxHeight: '680px', overflowY: 'auto', overflowX: 'auto', WebkitOverflowScrolling: 'touch', border: '1px solid #cbd5e1' }}>
-          <table className="audit-table" style={{ margin: 0, width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
+        <div className="overflow-x-auto border border-slate-200 rounded-lg max-h-[500px]">
+          <table className="w-full text-left text-xs border-collapse min-w-[600px]">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-mono uppercase text-[11px] sticky top-0 z-10">
               <tr>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '90px' }}>Method</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>Endpoint Path / URL</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '130px' }}>Type</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '180px' }}>Domain / Subgroup</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '160px' }}>Auth Posture</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '100px' }}>Confidence</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>Summary & Parameters</th>
-                <th style={{ position: 'sticky', top: 0, zIndex: 10, background: '#f1f5f9', borderBottom: '2px solid #cbd5e1', width: '180px' }}>Source Origin</th>
+                <th className="py-2.5 px-3">Method</th>
+                <th className="py-2.5 px-3">Path</th>
+                <th className="py-2.5 px-3">Type</th>
+                <th className="py-2.5 px-3">Subgroup</th>
+                <th className="py-2.5 px-3">Auth</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100 font-mono">
               {filteredEndpoints.length === 0 ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', color: '#94a3b8', padding: '36px' }}>
-                    No endpoints match the selected filter criteria.
+                  <td colSpan="5" className="py-8 text-center text-slate-400">
+                    No endpoints match filter.
                   </td>
                 </tr>
               ) : (
                 filteredEndpoints.map((ep, idx) => (
-                  <tr key={idx} style={{ background: idx % 2 === 0 ? '#ffffff' : '#fafbfc' }}>
-                    <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>
+                  <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-2 px-3">
                       {(ep.methods || ['GET']).map(m => (
                         <MethodBadge key={m} method={m} />
                       ))}
                     </td>
-                    <td style={{ verticalAlign: 'middle' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                        <strong style={{ color: ep.isFrontend ? '#3730a3' : '#0369a1', fontFamily: "'JetBrains Mono', monospace", fontSize: '0.86rem', wordBreak: 'break-all' }}>
-                          {ep.path}
-                        </strong>
-                        {ep.full_url && ep.full_url !== ep.path && (
-                          <a href={ep.full_url} target="_blank" rel="noreferrer" style={{ fontSize: '0.74rem', color: '#64748b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                            <span>{ep.full_url}</span>
-                            <ExternalLink style={{ width: '11px', height: '11px', flexShrink: 0 }} />
-                          </a>
-                        )}
-                      </div>
-                    </td>
-                    <td style={{ verticalAlign: 'middle' }}>
-                      <span 
-                        style={{ 
-                          display: 'inline-block',
-                          padding: '3px 8px',
-                          fontSize: '0.72rem',
-                          fontWeight: 800,
-                          fontFamily: "'JetBrains Mono', monospace",
-                          letterSpacing: '0.04em',
-                          background: ep.isFrontend ? '#eef2ff' : '#ecfdf5',
-                          color: ep.isFrontend ? '#3730a3' : '#065f46',
-                          border: `1px solid ${ep.isFrontend ? '#c7d2fe' : '#a7f3d0'}`,
-                          borderRadius: '0px'
-                        }}
-                      >
-                        {ep.isFrontend ? 'FRONTEND ROUTE' : 'BACKEND API'}
+                    <td className="py-2 px-3 text-slate-900 font-bold truncate max-w-xs">{ep.path}</td>
+                    <td className="py-2 px-3">
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        ep.isFrontend ? 'bg-indigo-50 text-indigo-700' : 'bg-emerald-50 text-emerald-700'
+                      }`}>
+                        {ep.isFrontend ? 'FRONTEND' : 'BACKEND'}
                       </span>
                     </td>
-                    <td style={{ verticalAlign: 'middle', fontSize: '0.82rem', fontWeight: 600, color: '#334155' }}>
-                      {getCategoryIcon(ep.resolvedSubgroup)} {ep.resolvedSubgroup}
-                    </td>
-                    <td style={{ verticalAlign: 'middle' }}>
+                    <td className="py-2 px-3 font-sans text-slate-600">{ep.resolvedSubgroup}</td>
+                    <td className="py-2 px-3">
                       <AccessStateBadge state={ep.access_state} />
-                    </td>
-                    <td style={{ verticalAlign: 'middle' }}>
-                      <span 
-                        style={{ 
-                          fontSize: '0.72rem', 
-                          fontWeight: 700, 
-                          fontFamily: "'JetBrains Mono', monospace",
-                          padding: '3px 8px', 
-                          background: '#f1f5f9', 
-                          color: '#475569', 
-                          border: '1px solid #cbd5e1' 
-                        }}
-                      >
-                        {ep.confidence || 'HIGH'}
-                      </span>
-                    </td>
-                    <td style={{ verticalAlign: 'middle' }}>
-                      <div style={{ color: '#0f172a', fontSize: '0.84rem' }}>{ep.summary || 'Discovered endpoint reference'}</div>
-                      {ep.parameters && ep.parameters.length > 0 && (
-                        <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '3px' }}>
-                          <strong>Params:</strong> <code style={{ background: '#f1f5f9', padding: '1px 4px', border: '1px solid #e2e8f0' }}>{ep.parameters.join(', ')}</code>
-                        </div>
-                      )}
-                    </td>
-                    <td style={{ verticalAlign: 'middle', color: '#64748b', fontSize: '0.76rem' }}>
-                      <code style={{ background: '#f8fafc', padding: '2px 4px', border: '1px solid #e2e8f0' }}>
-                        {ep.source || 'Script Inspection'}
-                      </code>
                     </td>
                   </tr>
                 ))

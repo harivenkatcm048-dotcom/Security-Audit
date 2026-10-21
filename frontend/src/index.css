@@ -64,21 +64,20 @@
   --shadow-elevated: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
   --shadow-glow: 0 0 20px rgba(2, 132, 199, 0.18);
 
-  /* Radii - 100% SHARP CORNERS */
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
+  /* Radii - Modern Precision Geometry */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 }
 
 /* ==============================================================================
-   Base Resets & Global Styles - SHARP CORNER ENFORCEMENT
+   Base Resets & Global Styles
    ============================================================================== */
 *, ::before, ::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border-radius: 0px !important;
 }
 
 html {
@@ -86,6 +85,18 @@ html {
   color-scheme: light;
   overflow-x: hidden;
   max-width: 100vw;
+}
+
+/* Universal No-Scrollbar Utility for Touch Scrollable Navigation Bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -344,32 +355,33 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 12px;
-  background: #f8fafc;
+  padding: 5px 12px;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 0px !important;
+  border-radius: var(--radius-full);
   cursor: pointer;
   font-size: 0.82rem;
   color: #334155;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.15s ease;
 }
 
 .nav-member-badge:hover {
-  background: #f1f5f9;
+  background: #f8fafc;
   border-color: #cbd5e1;
 }
 
 .nav-member-avatar {
-  width: 22px;
-  height: 22px;
-  background: #0284c7;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
   color: #fff;
   font-weight: 700;
   font-size: 0.72rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0px !important;
+  border-radius: 50% !important;
 }
 
 .nav-cta-btn {
@@ -382,7 +394,7 @@ button {
   font-weight: 700;
   padding: 8px 18px;
   border: 1px solid #0284c7;
-  border-radius: 0px !important;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(2, 132, 199, 0.2);
   transition: all 0.15s ease;
@@ -397,12 +409,13 @@ button {
 
 .nav-mobile-toggle {
   display: none;
-  background: #f8fafc;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 0px !important;
-  padding: 8px;
+  border-radius: var(--radius-lg);
+  padding: 7px;
   cursor: pointer;
   color: #334155;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: all 0.15s ease;
 }
 
@@ -477,11 +490,9 @@ button {
     display: none !important;
   }
 
-  /* Compact Member Badge on mobile */
+  /* Member badge is cleanly hidden on mobile phones since bottom bar handles 1-tap Account access */
   .nav-member-badge {
-    padding: 4px 8px !important;
-    gap: 4px !important;
-    font-size: 0.75rem !important;
+    display: none !important;
   }
 
   /* Responsive Audit Tables */
@@ -495,6 +506,11 @@ button {
 
   .speedometer-display-wrap {
     padding: 12px 6px !important;
+  }
+
+  .segmented-tabs-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
   }
 }
 
@@ -629,7 +645,7 @@ button {
   background: transparent;
   border: none;
   border-left: 3px solid transparent;
-  border-radius: 0px !important;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all 0.15s ease;
 }
@@ -2499,7 +2515,7 @@ pre.code-block {
 .history-item {
   background: #ffffff;
   border: 1px solid #cbd5e1;
-  border-radius: 0px !important;
+  border-radius: var(--radius-lg);
   padding: 16px 22px;
   margin-bottom: 10px;
   display: flex;
@@ -2543,7 +2559,7 @@ pre.code-block {
 }
 
 .grade-circle {
-  border-radius: 0px !important;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3446,21 +3462,74 @@ pre.code-block {
 
   .cockpit-top-bar {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .cockpit-title {
+    font-size: 0.95rem !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em !important;
   }
 
   .cockpit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
     width: 100%;
-    justify-content: space-between;
+  }
+
+  .cockpit-btn.rev-btn {
+    flex: 1 1 100% !important;
+    min-height: 42px !important;
+    justify-content: center;
+    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%) !important;
+    border-color: #fed7aa !important;
+    color: #c2410c !important;
+    border-radius: var(--radius-lg);
+  }
+
+  .cockpit-btn.sound-btn,
+  .cockpit-btn.unit-btn {
+    flex: 1 1 calc(33.333% - 6px) !important;
+    min-width: 0 !important;
+    padding: 8px 6px !important;
+    font-size: 0.74rem !important;
+    justify-content: center;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    min-height: 38px !important;
+  }
+
+  .cockpit-stage-counter {
+    flex: 1 1 calc(33.333% - 6px) !important;
+    min-width: 0 !important;
+    padding: 8px 6px !important;
+    font-size: 0.74rem !important;
+    justify-content: center;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    min-height: 38px !important;
+    margin-left: 0 !important;
+  }
+
+  .shift-lights-bar-container.light-shift-track {
+    padding: 10px 12px !important;
+    border-radius: var(--radius-lg) !important;
+    margin-bottom: 14px !important;
   }
 
   .shift-lights-track {
-    gap: 6px;
+    gap: 5px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
   }
 
   .shift-led {
     width: 18px;
     height: 18px;
+    flex-shrink: 0;
   }
 
   .dashboard-container {
@@ -3503,9 +3572,12 @@ pre.code-block {
     height: 14px;
   }
 
-  .cockpit-btn {
-    padding: 6px 10px;
-    font-size: 0.74rem;
+  .cockpit-btn.sound-btn,
+  .cockpit-btn.unit-btn,
+  .cockpit-stage-counter {
+    flex: 1 1 calc(33.333% - 6px) !important;
+    padding: 6px 4px !important;
+    font-size: 0.7rem !important;
   }
 }
 

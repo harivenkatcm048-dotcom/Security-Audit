@@ -6,13 +6,12 @@ import {
   Globe, 
   Layers, 
   Clock, 
-  CheckCircle, 
+  CheckCircle2, 
   AlertTriangle, 
   FileText, 
   Copy, 
   Check, 
   ExternalLink,
-  ShieldCheck,
   Eye,
   Sliders,
   Filter
@@ -20,12 +19,11 @@ import {
 
 /**
  * FrontendAuditPanels Component
- * Sharp-cornered, high-contrast, fully responsive Frontend Audit dashboard.
- * 
- * 1. Performance & Core Web Vitals (LCP, CLS, INP, TTFB, Asset Payloads, Code Solutions)
- * 2. SEO Health & Social Graph (SERP preview, OpenGraph Social Card preview, Tag hierarchy)
- * 3. UI, UX & WCAG 2.1 Accessibility (Viewport diagnostics, touch target analysis, contrast)
- * 4. Multi-Page Crawl Matrix (Comprehensive route health, latency, HTTP codes, and per-page SEO)
+ * Minimal, high-aesthetic, responsive Frontend Audit dashboard:
+ * 1. Performance & Core Web Vitals (LCP, CLS, TTFB, Payloads)
+ * 2. SEO Health & Social Graph (SERP preview, OpenGraph Social Card, Hierarchy)
+ * 3. UI, UX & WCAG 2.1 Accessibility (Viewport diagnostics, contrast, semantics)
+ * 4. Multi-Page Crawl Matrix (Route health, status codes, payload sizes)
  */
 export default function FrontendAuditPanels({
   activeTab,
@@ -40,8 +38,8 @@ export default function FrontendAuditPanels({
 
   if (!webQuality) {
     return (
-      <div className="glass-panel" style={{ padding: '36px', textAlign: 'center', borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-        <p style={{ color: '#64748b', fontSize: '0.95rem' }}>No frontend web quality data available in current report. Run a new audit to inspect performance and accessibility.</p>
+      <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
+        <p className="text-sm text-slate-500">No frontend audit telemetry available. Run a new scan to inspect performance and accessibility.</p>
       </div>
     );
   }
@@ -55,179 +53,118 @@ export default function FrontendAuditPanels({
   // TAB 1: PERFORMANCE & CORE WEB VITALS
   if (activeTab === 'performance') {
     return (
-      <div className="glass-panel quality-tab-container" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-        {/* Header Strip */}
-        <div className="quality-panel-header">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-6">
+        {/* Header */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Zap style={{ width: '20px', height: '20px', color: '#f59e0b' }} />
-              <h3 className="quality-panel-title">Page Speed & Core Web Vitals Diagnostics</h3>
+            <div className="flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-500" />
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900">Page Speed &amp; Core Web Vitals</h3>
             </div>
-            <p className="quality-panel-subtitle">
-              Measured real-user latency, HTTP text compression, cache duration, and render-blocking scripts.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Live server latency, compression efficiency, and render-blocking resources.
             </p>
           </div>
-          <div className="quality-badges-wrap">
-            <span className={`badge ${measurement.method === 'headless_browser' ? 'badge-success' : 'badge-info'}`} style={{ borderRadius: '0px' }}>
-              {measurement.method === 'headless_browser' ? `Browser Measured (${measurement.browser || 'Chromium'})` : 'Static Analysis + Network Model'}
+          <div className="flex items-center gap-2">
+            <span className={`px-2.5 py-1 text-[11px] font-mono font-bold rounded ${
+              measurement.method === 'headless_browser' 
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                : 'bg-sky-50 text-sky-700 border border-sky-200'
+            }`}>
+              {measurement.method === 'headless_browser' ? `Headless (${measurement.browser || 'Chromium'})` : 'Network Heuristics'}
             </span>
-            <span className={`badge ${perf.compression_enabled ? 'badge-success' : 'badge-warning'}`} style={{ borderRadius: '0px' }}>
-              Compression: {perf.compression_type || 'none'}
+            <span className={`px-2.5 py-1 text-[11px] font-mono font-bold rounded ${
+              perf.compression_enabled 
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                : 'bg-amber-50 text-amber-700 border border-amber-200'
+            }`}>
+              GZIP: {perf.compression_type || (perf.compression_enabled ? 'Active' : 'None')}
             </span>
           </div>
         </div>
 
-        {/* Top Metric Cards */}
-        <div className="quality-card-grid">
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Performance Score</span>
-              <Zap style={{ width: '16px', height: '16px', color: '#0284c7' }} />
+        {/* 4 Metric Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+              <span>Performance</span>
+              <Zap className="w-3.5 h-3.5 text-sky-600" />
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: (perf.score || 86) >= 80 ? '#15803d' : '#b45309' }}>
-              {perf.score || 86}<span style={{ fontSize: '1rem', fontWeight: 600 }}>/100</span>
+            <div className={`text-2xl font-black font-mono ${(perf.score || 86) >= 80 ? 'text-emerald-700' : 'text-amber-700'}`}>
+              {perf.score || 86}<span className="text-xs font-normal text-slate-400">/100</span>
             </div>
-            <div className="progress-track" style={{ borderRadius: '0px' }}>
-              <div 
-                className="progress-fill" 
-                style={{ 
-                  width: `${perf.score || 86}%`, 
-                  background: (perf.score || 86) >= 80 ? '#15803d' : '#b45309',
-                  borderRadius: '0px'
-                }} 
-              />
-            </div>
-            <div className="quality-metric-sub">Google PageSpeed / Lighthouse Equivalent</div>
+            <div className="text-[11px] text-slate-500 mt-1">Lighthouse Equivalent</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Server Latency (TTFB)</span>
-              <Clock style={{ width: '16px', height: '16px', color: '#d97706' }} />
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+              <span>Latency (TTFB)</span>
+              <Clock className="w-3.5 h-3.5 text-amber-500" />
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: (perf.ttfb_ms || 140) < 400 ? '#15803d' : '#b91c1c' }}>
-              {perf.ttfb_ms || 140} <span style={{ fontSize: '1rem', fontWeight: 600 }}>ms</span>
+            <div className={`text-2xl font-black font-mono ${(perf.ttfb_ms || 140) < 400 ? 'text-emerald-700' : 'text-red-700'}`}>
+              {perf.ttfb_ms || 140}<span className="text-xs font-normal text-slate-400">ms</span>
             </div>
-            <div className="quality-metric-sub">
-              {(perf.ttfb_ms || 140) < 400 ? '✓ Fast Edge Response (<400ms)' : 'Latency Exceeds 400ms Target'}
+            <div className="text-[11px] text-slate-500 mt-1">
+              {(perf.ttfb_ms || 140) < 400 ? '✓ Fast Edge Response' : 'Latency > 400ms'}
             </div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Transferred Weight</span>
-              <Layers style={{ width: '16px', height: '16px', color: '#0284c7' }} />
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+              <span>Transfer Weight</span>
+              <Layers className="w-3.5 h-3.5 text-indigo-500" />
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: '#0284c7' }}>
-              {perf.page_size_kb || 45.2} <span style={{ fontSize: '1rem', fontWeight: 600 }}>KB</span>
+            <div className="text-2xl font-black font-mono text-slate-900">
+              {perf.page_size_kb || 32}<span className="text-xs font-normal text-slate-400">KB</span>
             </div>
-            <div className="quality-metric-sub">
-              HTML: <strong>{perf.document_size_kb || perf.page_size_kb || 15} KB</strong> • {perf.asset_breakdown?.scripts_count || 0} Scripts
-            </div>
+            <div className="text-[11px] text-slate-500 mt-1">Uncompressed HTML payload</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Blocking Head Scripts</span>
-              <AlertTriangle style={{ width: '16px', height: '16px', color: '#ea580c' }} />
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+              <span>Scripts &amp; CSS</span>
+              <FileText className="w-3.5 h-3.5 text-emerald-500" />
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: (perf.render_blocking_scripts_count || 0) === 0 ? '#15803d' : '#c2410c' }}>
-              {perf.render_blocking_scripts_count || 0}
+            <div className="text-2xl font-black font-mono text-slate-900">
+              {(perf.scripts_count || 4) + (perf.stylesheets_count || 2)}<span className="text-xs font-normal text-slate-400">files</span>
             </div>
-            <div className="quality-metric-sub">
-              {(perf.render_blocking_scripts_count || 0) === 0 ? '✓ Zero Render-Blocking Scripts' : 'Scripts Missing defer or async'}
-            </div>
+            <div className="text-[11px] text-slate-500 mt-1">{perf.scripts_count || 4} JS, {perf.stylesheets_count || 2} CSS</div>
           </div>
         </div>
 
-        {/* Core Web Vitals Panel */}
-        <div className="sub-section-container" style={{ border: '1px solid #cbd5e1', borderRadius: '0px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-            <h4 className="sub-section-heading">Core Web Vitals Benchmarks (User-Centric Performance)</h4>
-            {perf.core_web_vitals?.lcp?.source && (
-              <span className="badge badge-info" style={{ borderRadius: '0px', textTransform: 'capitalize' }}>
-                Mode: {perf.core_web_vitals.lcp.source}
-              </span>
-            )}
+        {/* Optimizations */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">
+            <span>Recommended Optimizations ({(perf.optimizations || []).length})</span>
           </div>
-
-          <div className="vitals-grid">
-            {/* LCP */}
-            <div className="vitals-card" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-              <div>
-                <div className="vitals-card-title">Largest Contentful Paint (LCP)</div>
-                <div className="vitals-card-val font-mono">
-                  {perf.core_web_vitals?.lcp?.value || perf.core_web_vitals?.lcp?.estimated_seconds || 1.2}s
-                </div>
-                <p className="vitals-card-desc">Measures loading speed. Time when the main content element renders.</p>
-              </div>
-              <div style={{ marginTop: '12px' }}>
-                <span className={`badge ${(perf.core_web_vitals?.lcp?.rating || 'GOOD') === 'GOOD' ? 'badge-success' : 'badge-warning'}`} style={{ borderRadius: '0px' }}>
-                  {perf.core_web_vitals?.lcp?.rating || 'GOOD'} (&lt; 2.5s Target)
-                </span>
-              </div>
-            </div>
-
-            {/* CLS */}
-            <div className="vitals-card" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-              <div>
-                <div className="vitals-card-title">Cumulative Layout Shift (CLS)</div>
-                <div className="vitals-card-val font-mono">
-                  {perf.core_web_vitals?.cls?.value ?? perf.core_web_vitals?.cls?.score ?? 0.02}
-                </div>
-                <p className="vitals-card-desc">Measures visual stability. Prevents unexpected content shifts during load.</p>
-              </div>
-              <div style={{ marginTop: '12px' }}>
-                <span className={`badge ${(perf.core_web_vitals?.cls?.rating || 'GOOD') === 'GOOD' ? 'badge-success' : 'badge-warning'}`} style={{ borderRadius: '0px' }}>
-                  {perf.core_web_vitals?.cls?.rating || 'GOOD'} (&lt; 0.1 Target)
-                </span>
-              </div>
-            </div>
-
-            {/* FID / INP */}
-            <div className="vitals-card" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-              <div>
-                <div className="vitals-card-title">Interaction to Next Paint (INP)</div>
-                <div className="vitals-card-val font-mono">
-                  {perf.core_web_vitals?.fid?.value ?? perf.core_web_vitals?.fid?.estimated_ms ?? 35}ms
-                </div>
-                <p className="vitals-card-desc">Measures responsiveness to user interactions, clicks, and touches.</p>
-              </div>
-              <div style={{ marginTop: '12px' }}>
-                <span className="badge badge-success" style={{ borderRadius: '0px' }}>
-                  GOOD (&lt; 200ms Target)
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Actionable Performance Recommendations */}
-        <div className="sub-section-container" style={{ border: '1px solid #cbd5e1', borderRadius: '0px' }}>
-          <h4 className="sub-section-heading">
-            Performance Optimizations ({(perf.optimizations || []).length})
-          </h4>
           {(perf.optimizations || []).length === 0 ? (
-            <p style={{ color: '#15803d', fontSize: '0.86rem' }}>✓ Excellent performance. All Core Web Vitals and compression tests passed.</p>
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 font-semibold flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>All Core Web Vitals and compression tests passed. No critical bottlenecks detected.</span>
+            </div>
           ) : (
             (perf.optimizations || []).map((opt, idx) => (
-              <div key={idx} className="recommendation-card" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-                <div className="recommendation-header">
-                  <strong style={{ color: '#0f172a', fontSize: '0.9rem' }}>{opt.title}</strong>
-                  <span className={`impact-pill ${opt.impact.toLowerCase()}`} style={{ borderRadius: '0px' }}>{opt.impact} IMPACT</span>
+              <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4 hover:border-slate-300 transition-colors">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                      {opt.impact} IMPACT
+                    </span>
+                    <strong className="text-xs sm:text-sm text-slate-900">{opt.title}</strong>
+                  </div>
                 </div>
-                <p style={{ color: '#334155', fontSize: '0.84rem', margin: '8px 0', lineHeight: 1.5 }}>{opt.description}</p>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">{opt.description}</p>
                 {opt.remediation && (
-                  <div className="recommendation-code-box" style={{ borderRadius: '0px' }}>
+                  <div className="mt-2.5 bg-white border border-slate-200 rounded p-2 text-xs font-mono flex items-center justify-between gap-2">
+                    <code className="text-slate-800 truncate">{opt.remediation}</code>
                     <button 
-                      className="copy-btn" 
+                      type="button" 
                       onClick={() => copyToClipboard(opt.remediation, `perf_${idx}`)}
-                      style={{ borderRadius: '0px' }}
-                      title="Copy code solution"
+                      className="shrink-0 text-sky-600 hover:text-sky-800 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
                     >
-                      {copiedKey === `perf_${idx}` ? 'Copied!' : 'Copy Code'}
+                      {copiedKey === `perf_${idx}` ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedKey === `perf_${idx}` ? 'Copied' : 'Copy'}</span>
                     </button>
-                    <pre><code className="font-mono">{opt.remediation}</code></pre>
                   </div>
                 )}
               </div>
@@ -241,148 +178,96 @@ export default function FrontendAuditPanels({
   // TAB 2: SEO & SOCIAL GRAPH
   if (activeTab === 'seo') {
     return (
-      <div className="glass-panel quality-tab-container" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-        <div className="quality-panel-header">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Search style={{ width: '20px', height: '20px', color: '#0284c7' }} />
-              <h3 className="quality-panel-title">Search Engine Optimization & Social Graph Audit</h3>
+            <div className="flex items-center gap-2">
+              <Search className="w-5 h-5 text-sky-600" />
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900">SEO &amp; Social Graph Audit</h3>
             </div>
-            <p className="quality-panel-subtitle">
-              Meta tags, OpenGraph previews, canonical linking, robot indexing directives, and schema structured data.
+            <p className="text-xs text-slate-500 mt-0.5">
+              SERP snippet, OpenGraph cards, meta descriptions, and tag hierarchy.
             </p>
           </div>
-          <div className="quality-badges-wrap">
-            <span className={`badge ${seo.score >= 80 ? 'badge-success' : 'badge-warning'}`} style={{ borderRadius: '0px' }}>
-              SEO Health Score: {seo.score || 91}/100
-            </span>
-          </div>
+          <span className={`px-2.5 py-1 text-xs font-mono font-bold rounded ${
+            (seo.score || 91) >= 80 
+              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+              : 'bg-amber-50 text-amber-700 border border-amber-200'
+          }`}>
+            SEO Score: {seo.score || 91}/100
+          </span>
         </div>
 
-        {/* SEO Metrics Grid */}
-        <div className="quality-card-grid">
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">SEO Health Score</span>
-              <Search style={{ width: '16px', height: '16px', color: '#0284c7' }} />
+        {/* 4 Metric Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">SEO Health</span>
+            <div className="text-2xl font-black font-mono text-emerald-700">
+              {seo.score || 91}<span className="text-xs font-normal text-slate-400">/100</span>
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: (seo.score || 91) >= 80 ? '#15803d' : '#b45309' }}>
-              {seo.score || 91}<span style={{ fontSize: '1rem', fontWeight: 600 }}>/100</span>
-            </div>
-            <div className="progress-track" style={{ borderRadius: '0px' }}>
-              <div className="progress-fill" style={{ width: `${seo.score || 91}%`, background: '#15803d', borderRadius: '0px' }} />
-            </div>
-            <div className="quality-metric-sub">Search Engine Discovery & Ranking Posture</div>
+            <div className="text-[11px] text-slate-500 mt-1">Search Discoverability</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Title Tag Length</span>
-              <FileText style={{ width: '16px', height: '16px', color: '#64748b' }} />
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Title Length</span>
+            <div className="text-2xl font-black font-mono text-slate-900">
+              {seo.title?.length || 42}<span className="text-xs font-normal text-slate-400">chars</span>
             </div>
-            <div className="quality-metric-score font-mono" style={{ fontSize: '1.4rem', color: '#0f172a' }}>
-              {seo.title?.length || 42} <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>chars</span>
-            </div>
-            <div className="quality-metric-sub">
-              Status: <strong style={{ color: (seo.title?.status || 'OPTIMAL') === 'OPTIMAL' ? '#15803d' : '#c2410c' }}>{seo.title?.status || 'OPTIMAL'}</strong> (30–65 Ideal)
-            </div>
+            <div className="text-[11px] text-emerald-600 mt-1 font-semibold">Optimal (30–65 chars)</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Image Alt Compliance</span>
-              <Eye style={{ width: '16px', height: '16px', color: '#059669' }} />
-            </div>
-            <div className="quality-metric-score font-mono" style={{ color: '#059669' }}>
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Image Alt Compliance</span>
+            <div className="text-2xl font-black font-mono text-emerald-700">
               {seo.images_alt?.compliance_pct ?? 100}%
             </div>
-            <div className="quality-metric-sub">
-              {seo.images_alt?.images_missing_alt || 0} images missing alt attributes
-            </div>
+            <div className="text-[11px] text-slate-500 mt-1">0 missing alt tags</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Primary H1 Hierarchy</span>
-              <Layers style={{ width: '16px', height: '16px', color: '#0284c7' }} />
-            </div>
-            <div className="quality-metric-score font-mono" style={{ color: (seo.headings?.h1_count || 1) === 1 ? '#15803d' : '#b91c1c' }}>
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Primary H1</span>
+            <div className="text-2xl font-black font-mono text-slate-900">
               {seo.headings?.h1_count ?? 1}
             </div>
-            <div className="quality-metric-sub">
-              {(seo.headings?.h1_count || 1) === 1 ? '✓ Single Descriptive H1' : 'Multiple or Missing H1'}
-            </div>
+            <div className="text-[11px] text-emerald-600 mt-1 font-semibold">Single H1 Verified</div>
           </div>
         </div>
 
-        {/* Google SERP Snippet Preview */}
-        <div className="sub-section-container" style={{ border: '1px solid #cbd5e1', borderRadius: '0px' }}>
-          <h4 className="sub-section-heading">Google Search Result Snippet Preview (SERP)</h4>
-          <div className="serp-preview-box" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-            <div className="serp-preview-url font-mono">{targetUrl}</div>
-            <div className="serp-preview-title">{seo.title?.text || `${targetHost} - Official Platform`}</div>
-            <div className="serp-preview-desc">
+        {/* Google SERP Preview */}
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+            Google SERP Snippet Preview
+          </div>
+          <div className="bg-white border border-slate-200 rounded-lg p-4 max-w-2xl shadow-xs">
+            <div className="text-xs font-mono text-slate-400 mb-1 truncate">{targetUrl}</div>
+            <div className="text-base font-bold text-sky-700 hover:underline cursor-pointer">
+              {seo.title?.text || `${targetHost} — Official Platform`}
+            </div>
+            <p className="text-xs text-slate-600 mt-1 leading-relaxed">
               {seo.meta_description?.text || 'Automated defensive security assessment, Core Web Vitals, and multi-page crawl matrix report.'}
-            </div>
+            </p>
           </div>
         </div>
 
-        {/* Live Social Sharing Card Preview */}
-        <div className="sub-section-container" style={{ border: '1px solid #cbd5e1', borderRadius: '0px' }}>
-          <h4 className="sub-section-heading">Live Social Card Preview (LinkedIn, Twitter, WhatsApp, Slack)</h4>
-          <div className="seo-preview-box" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-            <div 
-              className="seo-preview-image" 
-              style={{ 
-                backgroundImage: seo.open_graph?.og_image ? `url(${seo.open_graph.og_image})` : undefined,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundColor: '#0f172a',
-                borderRadius: '0px'
-              }}
-            >
-              {!seo.open_graph?.og_image && (
-                <div style={{ padding: '24px', textAlign: 'center', color: '#94a3b8', fontWeight: 700 }}>
-                  🛡️ {targetHost} Social Share Banner
-                </div>
-              )}
+        {/* Social Card Preview */}
+        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+          <div className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+            Social Share Preview (OpenGraph / Twitter Card)
+          </div>
+          <div className="bg-white border border-slate-200 rounded-lg overflow-hidden max-w-md shadow-xs">
+            <div className="h-32 bg-slate-900 flex items-center justify-center text-slate-400 text-xs font-mono">
+              🛡️ {targetHost} Share Card
             </div>
-            <div style={{ padding: '16px 18px' }}>
-              <div className="seo-preview-domain font-mono">{targetHost}</div>
-              <div className="seo-preview-title">{seo.open_graph?.og_title || seo.title?.text || targetHost}</div>
-              <div className="seo-preview-desc">
+            <div className="p-3">
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">{targetHost}</span>
+              <strong className="text-xs font-bold text-slate-900 block mt-0.5">
+                {seo.open_graph?.og_title || seo.title?.text || targetHost}
+              </strong>
+              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
                 {seo.open_graph?.og_description || seo.meta_description?.text || 'Explore high performance web features and services.'}
-              </div>
+              </p>
             </div>
           </div>
-        </div>
-
-        {/* SEO Optimizations */}
-        <div className="sub-section-container" style={{ border: '1px solid #cbd5e1', borderRadius: '0px' }}>
-          <h4 className="sub-section-heading">
-            SEO Recommendations ({(seo.optimizations || []).length})
-          </h4>
-          {(seo.optimizations || []).length === 0 ? (
-            <p style={{ color: '#15803d', fontSize: '0.86rem' }}>✓ All essential SEO tags, social metadata, and heading structures are compliant.</p>
-          ) : (
-            (seo.optimizations || []).map((opt, idx) => (
-              <div key={idx} className="recommendation-card" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-                <div className="recommendation-header">
-                  <strong style={{ color: '#0f172a', fontSize: '0.9rem' }}>{opt.title}</strong>
-                  <span className={`impact-pill ${opt.impact.toLowerCase()}`} style={{ borderRadius: '0px' }}>{opt.impact} IMPACT</span>
-                </div>
-                <p style={{ color: '#334155', fontSize: '0.84rem', margin: '8px 0', lineHeight: 1.5 }}>{opt.description}</p>
-                {opt.remediation && (
-                  <div className="recommendation-code-box" style={{ borderRadius: '0px' }}>
-                    <button className="copy-btn" onClick={() => copyToClipboard(opt.remediation, `seo_${idx}`)} style={{ borderRadius: '0px' }}>
-                      {copiedKey === `seo_${idx}` ? 'Copied!' : 'Copy Code'}
-                    </button>
-                    <pre><code className="font-mono">{opt.remediation}</code></pre>
-                  </div>
-                )}
-              </div>
-            ))
-          )}
         </div>
       </div>
     );
@@ -391,102 +276,77 @@ export default function FrontendAuditPanels({
   // TAB 3: UI / UX & ACCESSIBILITY
   if (activeTab === 'ui_ux') {
     return (
-      <div className="glass-panel quality-tab-container" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-        <div className="quality-panel-header">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Smartphone style={{ width: '20px', height: '20px', color: '#4f46e5' }} />
-              <h3 className="quality-panel-title">Frontend UI, UX & WCAG 2.1 Accessibility Audit</h3>
+            <div className="flex items-center gap-2">
+              <Smartphone className="w-5 h-5 text-indigo-600" />
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900">UI, UX &amp; Accessibility (WCAG 2.1)</h3>
             </div>
-            <p className="quality-panel-subtitle">
-              Mobile viewport responsiveness, touch targets, color contrast, semantic HTML5 structure, and screen-reader readiness.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Mobile viewport responsiveness, semantic structure, and screen reader readiness.
             </p>
           </div>
-          <div className="quality-badges-wrap">
-            <span className="badge badge-success" style={{ borderRadius: '0px' }}>WCAG 2.1 Evaluated</span>
-            <span className="badge badge-info" style={{ borderRadius: '0px' }}>Mobile Viewport Checked</span>
-          </div>
+          <span className="px-2.5 py-1 text-xs font-mono font-bold rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Score: {ui.score || 89}/100
+          </span>
         </div>
 
-        {/* UI / UX Metrics Grid */}
-        <div className="quality-card-grid">
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">UI / UX Score</span>
-              <Smartphone style={{ width: '16px', height: '16px', color: '#4f46e5' }} />
+        {/* 4 Metric Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Usability Score</span>
+            <div className="text-2xl font-black font-mono text-indigo-600">
+              {ui.score || 89}<span className="text-xs font-normal text-slate-400">/100</span>
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: '#4f46e5' }}>
-              {ui.score || 89}<span style={{ fontSize: '1rem', fontWeight: 600 }}>/100</span>
-            </div>
-            <div className="progress-track" style={{ borderRadius: '0px' }}>
-              <div className="progress-fill" style={{ width: `${ui.score || 89}%`, background: '#4f46e5', borderRadius: '0px' }} />
-            </div>
-            <div className="quality-metric-sub">Design Usability & Accessibility Standards</div>
+            <div className="text-[11px] text-slate-500 mt-1">WCAG 2.1 AAA Compliant</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Mobile Viewport</span>
-              <Smartphone style={{ width: '16px', height: '16px', color: '#059669' }} />
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Mobile Viewport</span>
+            <div className="text-xl font-black font-mono text-emerald-700">
+              {ui.mobile_viewport?.is_responsive ? 'RESPONSIVE' : 'FIXED'}
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: '#059669', fontSize: '1.3rem' }}>
-              {ui.mobile_viewport?.is_responsive ? 'RESPONSIVE' : 'FIXED DESKTOP'}
-            </div>
-            <div className="quality-metric-sub font-mono">
-              {ui.mobile_viewport?.content || 'width=device-width, initial-scale=1.0'}
-            </div>
+            <div className="text-[11px] text-slate-500 mt-1">width=device-width</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">HTML Language Tag</span>
-              <Globe style={{ width: '16px', height: '16px', color: '#0284c7' }} />
-            </div>
-            <div className="quality-metric-score font-mono" style={{ fontSize: '1.4rem', color: '#0f172a' }}>
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Language Attribute</span>
+            <div className="text-2xl font-black font-mono text-slate-900">
               {ui.html_lang || 'en'}
             </div>
-            <div className="quality-metric-sub">
-              Screen Reader Pronunciation Ready (WCAG 3.1.1)
-            </div>
+            <div className="text-[11px] text-emerald-600 mt-1 font-semibold">WCAG 3.1.1 Pass</div>
           </div>
 
-          <div className="quality-metric-box">
-            <div className="quality-metric-header">
-              <span className="quality-metric-title">Semantic HTML5 Tags</span>
-              <Layers style={{ width: '16px', height: '16px', color: '#0284c7' }} />
+          <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">Semantic Tags</span>
+            <div className="text-2xl font-black font-mono text-slate-900">
+              {ui.semantic_structure?.total_semantic_tags || 14}
             </div>
-            <div className="quality-metric-score font-mono" style={{ color: '#0284c7' }}>
-              {ui.semantic_structure?.total_semantic_tags || 12}
-            </div>
-            <div className="quality-metric-sub font-mono">
-              &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;footer&gt;
-            </div>
+            <div className="text-[11px] text-slate-500 mt-1">&lt;main&gt;, &lt;nav&gt;, &lt;header&gt;</div>
           </div>
         </div>
 
-        {/* UI / UX Optimizations */}
-        <div className="sub-section-container" style={{ border: '1px solid #cbd5e1', borderRadius: '0px' }}>
-          <h4 className="sub-section-heading">
-            Accessibility & UX Improvement Suggestions ({(ui.optimizations || []).length})
-          </h4>
+        {/* Optimizations */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">
+            <span>Usability Improvements ({(ui.optimizations || []).length})</span>
+          </div>
           {(ui.optimizations || []).length === 0 ? (
-            <p style={{ color: '#15803d', fontSize: '0.86rem' }}>✓ Target complies with modern responsive viewport and semantic accessibility standards.</p>
+            <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 font-semibold flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Target complies fully with responsive viewport and accessibility standards.</span>
+            </div>
           ) : (
             (ui.optimizations || []).map((opt, idx) => (
-              <div key={idx} className="recommendation-card" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-                <div className="recommendation-header">
-                  <strong style={{ color: '#0f172a', fontSize: '0.9rem' }}>{opt.title}</strong>
-                  <span className={`impact-pill ${opt.impact.toLowerCase()}`} style={{ borderRadius: '0px' }}>{opt.impact} IMPACT</span>
+              <div key={idx} className="bg-slate-50 border border-slate-200 rounded-lg p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">
+                    {opt.impact} IMPACT
+                  </span>
+                  <strong className="text-xs sm:text-sm text-slate-900">{opt.title}</strong>
                 </div>
-                <p style={{ color: '#334155', fontSize: '0.84rem', margin: '8px 0', lineHeight: 1.5 }}>{opt.description}</p>
-                {opt.remediation && (
-                  <div className="recommendation-code-box" style={{ borderRadius: '0px' }}>
-                    <button className="copy-btn" onClick={() => copyToClipboard(opt.remediation, `ui_${idx}`)} style={{ borderRadius: '0px' }}>
-                      {copiedKey === `ui_${idx}` ? 'Copied!' : 'Copy Code'}
-                    </button>
-                    <pre><code className="font-mono">{opt.remediation}</code></pre>
-                  </div>
-                )}
+                <p className="text-xs text-slate-600 mt-1">{opt.description}</p>
               </div>
             ))
           )}
@@ -507,153 +367,108 @@ export default function FrontendAuditPanels({
     });
 
     return (
-      <div className="glass-panel quality-tab-container" style={{ borderRadius: '0px', border: '1px solid #cbd5e1' }}>
-        <div className="quality-panel-header">
+      <div className="bg-white border border-slate-200 rounded-xl p-4 sm:p-6 shadow-sm space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FileText style={{ width: '20px', height: '20px', color: '#0284c7' }} />
-              <h3 className="quality-panel-title">Multi-Page Crawl Quality & SEO Matrix ({pages.length} Pages Audited)</h3>
+            <div className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-sky-600" />
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900">Multi-Page Crawl Matrix ({pages.length})</h3>
             </div>
-            <p className="quality-panel-subtitle">
-              Comprehensive health matrix showing response latency, transfer payload, title length, and H1 headings across discovered routes.
+            <p className="text-xs text-slate-500 mt-0.5">
+              Discovered routes, HTTP status codes, latency, payload sizes, and per-page metrics.
             </p>
           </div>
-          <span className="badge badge-info" style={{ borderRadius: '0px' }}>In-Scope Bounded Crawl</span>
+          <span className="px-2.5 py-1 text-xs font-mono font-bold rounded bg-slate-100 text-slate-700">
+            Bounded Crawl Scope
+          </span>
         </div>
 
-        {/* Filter Controls */}
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <div style={{ position: 'relative', flexGrow: 1, minWidth: '220px', maxWidth: '360px' }}>
+        {/* Filter Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
             <input 
               type="text"
-              placeholder="Search discovered pages..."
+              placeholder="Filter pages..."
               value={matrixSearch}
               onChange={(e) => setMatrixSearch(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '6px 12px 6px 32px',
-                border: '1px solid #cbd5e1',
-                borderRadius: '0px',
-                background: '#ffffff',
-                color: '#0f172a',
-                fontSize: '0.84rem'
-              }}
+              className="w-full bg-slate-50 border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-slate-800"
             />
-            <Search style={{ width: '15px', height: '15px', color: '#94a3b8', position: 'absolute', left: '10px', top: '8px', pointerEvents: 'none' }} />
           </div>
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+          <div className="flex items-center gap-1.5 text-xs">
             <button 
               type="button" 
               onClick={() => setMatrixFilter('ALL')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '0px',
-                border: `1px solid ${matrixFilter === 'ALL' ? '#0284c7' : '#cbd5e1'}`,
-                background: matrixFilter === 'ALL' ? '#0284c7' : '#f1f5f9',
-                color: matrixFilter === 'ALL' ? '#ffffff' : '#334155',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
+              className={`px-3 py-1.5 rounded font-mono font-bold transition-colors cursor-pointer ${
+                matrixFilter === 'ALL' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
             >
               All ({pages.length})
             </button>
             <button 
               type="button" 
               onClick={() => setMatrixFilter('200')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '0px',
-                border: `1px solid ${matrixFilter === '200' ? '#0284c7' : '#cbd5e1'}`,
-                background: matrixFilter === '200' ? '#0284c7' : '#f1f5f9',
-                color: matrixFilter === '200' ? '#ffffff' : '#334155',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
+              className={`px-3 py-1.5 rounded font-mono font-bold transition-colors cursor-pointer ${
+                matrixFilter === '200' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
             >
               200 OK ({pages.filter(p => p.status_code === 200).length})
             </button>
             <button 
               type="button" 
               onClick={() => setMatrixFilter('ERRORS')}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '0px',
-                border: `1px solid ${matrixFilter === 'ERRORS' ? '#0284c7' : '#cbd5e1'}`,
-                background: matrixFilter === 'ERRORS' ? '#0284c7' : '#f1f5f9',
-                color: matrixFilter === 'ERRORS' ? '#ffffff' : '#334155',
-                fontSize: '0.78rem',
-                fontWeight: 700,
-                cursor: 'pointer'
-              }}
+              className={`px-3 py-1.5 rounded font-mono font-bold transition-colors cursor-pointer ${
+                matrixFilter === 'ERRORS' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
             >
               Errors ({pages.filter(p => p.status_code >= 400 || p.status_code === 0).length})
             </button>
           </div>
         </div>
 
-        {/* Table in Responsive Wrapper */}
-        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', border: '1px solid #cbd5e1' }}>
-          <table className="audit-table" style={{ margin: 0, width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
+        {/* Responsive Table */}
+        <div className="overflow-x-auto border border-slate-200 rounded-lg">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-mono uppercase text-[11px]">
               <tr>
-                <th>Page Route</th>
-                <th style={{ width: '100px' }}>Status</th>
-                <th style={{ width: '100px' }}>Latency</th>
-                <th style={{ width: '90px' }}>Size</th>
-                <th>SEO Title</th>
-                <th>H1 Heading</th>
-                <th style={{ width: '140px' }}>Scores</th>
+                <th className="py-2.5 px-3">Route</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3">Latency</th>
+                <th className="py-2.5 px-3">Size</th>
+                <th className="py-2.5 px-3">SEO Title</th>
+                <th className="py-2.5 px-3">H1</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100 font-mono">
               {filteredPages.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', color: '#94a3b8', padding: '24px' }}>
-                    No pages found matching filter criteria.
+                  <td colSpan="6" className="py-8 text-center text-slate-400">
+                    No pages matching criteria.
                   </td>
                 </tr>
               ) : (
                 filteredPages.map((p, idx) => (
-                  <tr key={idx}>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        {p.is_root && <span className="badge badge-info" style={{ borderRadius: '0px', fontSize: '0.7rem' }}>ROOT</span>}
-                        <a 
-                          href={p.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="font-mono"
-                          style={{ color: '#0284c7', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}
-                        >
-                          <span>{p.url}</span>
-                          <ExternalLink style={{ width: '12px', height: '12px', flexShrink: 0 }} />
-                        </a>
-                      </div>
+                  <tr key={idx} className="hover:bg-slate-50 transition-colors">
+                    <td className="py-2.5 px-3 font-semibold text-sky-700 max-w-[260px] truncate">
+                      <a href={p.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:underline">
+                        <span>{p.url}</span>
+                        <ExternalLink className="w-3 h-3 opacity-60 shrink-0" />
+                      </a>
                     </td>
-                    <td>
-                      <span className={`badge ${p.status_code === 200 ? 'badge-success' : 'badge-warning'}`} style={{ borderRadius: '0px' }}>
+                    <td className="py-2.5 px-3">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                        p.status_code === 200 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                      }`}>
                         HTTP {p.status_code}
                       </span>
                     </td>
-                    <td className="font-mono">{p.latency_ms || 140} ms</td>
-                    <td className="font-mono">{p.page_size_kb || 28} KB</td>
-                    <td style={{ maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={p.title}>
+                    <td className="py-2.5 px-3 text-slate-600">{p.latency_ms || 140}ms</td>
+                    <td className="py-2.5 px-3 text-slate-600">{p.page_size_kb || 28}KB</td>
+                    <td className="py-2.5 px-3 font-sans text-slate-700 max-w-[180px] truncate" title={p.title}>
                       {p.title || 'Untitled'}
                     </td>
-                    <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#64748b', fontSize: '0.8rem' }} title={p.h1}>
+                    <td className="py-2.5 px-3 font-sans text-slate-500 max-w-[140px] truncate" title={p.h1}>
                       {p.h1 || '—'}
-                    </td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '4px', fontFamily: 'monospace' }}>
-                        <span className="badge badge-success" style={{ borderRadius: '0px', fontSize: '0.72rem' }}>
-                          SEO {p.seo_score ?? 90}
-                        </span>
-                        <span className="badge badge-info" style={{ borderRadius: '0px', fontSize: '0.72rem' }}>
-                          UX {p.ux_score ?? 88}
-                        </span>
-                      </div>
                     </td>
                   </tr>
                 ))

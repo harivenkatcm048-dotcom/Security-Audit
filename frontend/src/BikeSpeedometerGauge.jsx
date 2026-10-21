@@ -10,7 +10,8 @@ import {
   Activity, 
   ShieldCheck, 
   Sparkles,
-  Sliders
+  Sliders,
+  Globe
 } from 'lucide-react';
 
 /**
@@ -344,76 +345,99 @@ export default function BikeSpeedometerGauge({
   const isRevLimiter = rpm >= 13200;
 
   return (
-    <div className="superbike-cockpit-panel glass-panel light-cockpit" style={{ borderRadius: '0px', border: '1px solid #cbd5e1', boxShadow: '4px 4px 0px 0px rgba(15, 23, 42, 0.08)' }}>
+    <div className="superbike-cockpit-panel glass-panel light-cockpit" style={{ borderRadius: '16px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px -2px rgba(15, 23, 42, 0.05)', overflow: 'hidden' }}>
       {/* Stitch Mode Switch Bar */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '10px 18px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', gap: '8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Gauge className="w-4 h-4 text-sky-600" />
-          <span style={{ fontSize: '0.86rem', fontWeight: 700, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            Target Telemetry & Speedometer Cockpit
-          </span>
-          <span style={{ fontSize: '0.78rem', color: '#64748b', fontFamily: "'JetBrains Mono', monospace" }}>
-            // {targetDomain || 'test.fipmoney.com'}
-          </span>
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', padding: '12px 18px', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#e0f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Gauge className="w-4 h-4 text-sky-600" />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>
+              Target Telemetry Cockpit
+            </div>
+            <div style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: "'JetBrains Mono', monospace" }}>
+              {targetDomain || 'nexentra.space'}
+            </div>
+          </div>
         </div>
 
-        {/* Mode Switch Tabs */}
-        <div style={{ display: 'inline-flex', border: '1px solid #cbd5e1', background: '#ffffff' }}>
+        {/* Mode Switch Tabs - Modern Segmented Pill Control */}
+        <div className="segmented-tabs-wrap" style={{ display: 'inline-flex', background: '#e2e8f0', padding: '3px', borderRadius: '10px', gap: '2px', width: '100%', maxWidth: '360px' }}>
           <button
             type="button"
             onClick={() => setGaugeMode('security')}
             style={{
-              padding: '6px 14px',
-              fontSize: '0.75rem',
+              flex: 1,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              padding: '6px 10px',
+              fontSize: '0.76rem',
               fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              background: gaugeMode === 'security' ? '#0f172a' : 'transparent',
-              color: gaugeMode === 'security' ? '#ffffff' : '#64748b',
+              background: gaugeMode === 'security' ? '#ffffff' : 'transparent',
+              color: gaugeMode === 'security' ? '#0f172a' : '#64748b',
               border: 'none',
               cursor: 'pointer',
-              borderRadius: '0px'
+              borderRadius: '8px',
+              boxShadow: gaugeMode === 'security' ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap'
             }}
           >
-            Security Risk Index
+            <ShieldCheck className="w-3.5 h-3.5" style={{ color: gaugeMode === 'security' ? '#0284c7' : '#94a3b8' }} />
+            <span>Security</span>
           </button>
           <button
             type="button"
             onClick={() => setGaugeMode('velocity')}
             style={{
-              padding: '6px 14px',
-              fontSize: '0.75rem',
+              flex: 1,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              padding: '6px 10px',
+              fontSize: '0.76rem',
               fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              background: gaugeMode === 'velocity' ? '#0f172a' : 'transparent',
-              color: gaugeMode === 'velocity' ? '#ffffff' : '#64748b',
+              background: gaugeMode === 'velocity' ? '#ffffff' : 'transparent',
+              color: gaugeMode === 'velocity' ? '#0f172a' : '#64748b',
               border: 'none',
-              borderLeft: '1px solid #cbd5e1',
               cursor: 'pointer',
-              borderRadius: '0px'
+              borderRadius: '8px',
+              boxShadow: gaugeMode === 'velocity' ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap'
             }}
           >
-            Core Web Vitals Velocity
+            <Zap className="w-3.5 h-3.5" style={{ color: gaugeMode === 'velocity' ? '#f59e0b' : '#94a3b8' }} />
+            <span>Vitals</span>
           </button>
           <button
             type="button"
             onClick={() => setGaugeMode('seo')}
             style={{
-              padding: '6px 14px',
-              fontSize: '0.75rem',
+              flex: 1,
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              padding: '6px 10px',
+              fontSize: '0.76rem',
               fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.04em',
-              background: gaugeMode === 'seo' ? '#0f172a' : 'transparent',
-              color: gaugeMode === 'seo' ? '#ffffff' : '#64748b',
+              background: gaugeMode === 'seo' ? '#ffffff' : 'transparent',
+              color: gaugeMode === 'seo' ? '#0f172a' : '#64748b',
               border: 'none',
-              borderLeft: '1px solid #cbd5e1',
               cursor: 'pointer',
-              borderRadius: '0px'
+              borderRadius: '8px',
+              boxShadow: gaugeMode === 'seo' ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap'
             }}
           >
-            SEO & Visibility Health
+            <Globe className="w-3.5 h-3.5" style={{ color: gaugeMode === 'seo' ? '#10b981' : '#94a3b8' }} />
+            <span>SEO</span>
           </button>
         </div>
       </div>
@@ -426,12 +450,12 @@ export default function BikeSpeedometerGauge({
           </div>
           <div>
             <div className="cockpit-title-row">
-              <span className="cockpit-title text-slate-900">Superbike Velocity Cluster</span>
-              <span className="cockpit-sub-brand text-sky-700">Porsche White Edition v3.2</span>
+              <span className="cockpit-title text-slate-900">Velocity Telemetry Cluster</span>
+              <span className="cockpit-sub-brand text-sky-700">Porsche White Edition</span>
             </div>
             <div className="cockpit-status-chips">
               <span className={`cockpit-badge ${complete ? 'completed' : (isScanning ? 'scanning' : '')}`}>
-                {complete ? '🏁 TOP SPEED REACHED • REPORT READY' : (isScanning ? `⚡ STAGE ${currentStageIndex + 1}/${totalStages}: AUDITING` : 'ENGINE READY • IDLE')}
+                {complete ? '🏁 TOP SPEED REACHED' : (isScanning ? `⚡ STAGE ${currentStageIndex + 1}/${totalStages}` : 'ENGINE READY • IDLE')}
               </span>
               <span className="telemetry-pill light-pill">
                 <Activity className="w-3.5 h-3.5 text-sky-600 inline mr-1" />
@@ -441,7 +465,7 @@ export default function BikeSpeedometerGauge({
           </div>
         </div>
 
-        {/* Action Controls */}
+        {/* Action Controls - 2-Tier Mobile Grid: Row 1 Rev Button, Row 2 Utility Toggles */}
         <div className="cockpit-actions">
           <button 
             type="button" 
@@ -452,9 +476,9 @@ export default function BikeSpeedometerGauge({
             onTouchEnd={endRevBlip}
             title="Click & Hold (or hold Spacebar) to rev the tachometer!"
           >
-            <Flame className="w-4 h-4 text-orange-500 mr-1.5" />
-            <span>HOLD TO REV UP</span>
-            <kbd className="rev-kbd light-kbd">SPACE</kbd>
+            <Flame className="w-4 h-4 text-orange-500 mr-1.5 shrink-0" />
+            <span className="font-extrabold tracking-wide">HOLD TO REV UP</span>
+            <kbd className="rev-kbd light-kbd hidden sm:inline-block ml-2">SPACE</kbd>
           </button>
           
           <button 
@@ -465,12 +489,12 @@ export default function BikeSpeedometerGauge({
           >
             {soundEnabled ? (
               <>
-                <Volume2 className="w-4 h-4 text-emerald-600 mr-1.5 animate-pulse" />
+                <Volume2 className="w-3.5 h-3.5 text-emerald-600 mr-1 animate-pulse shrink-0" />
                 <span>SOUND ON</span>
               </>
             ) : (
               <>
-                <VolumeX className="w-4 h-4 text-slate-500 mr-1.5" />
+                <VolumeX className="w-3.5 h-3.5 text-slate-400 mr-1 shrink-0" />
                 <span>AUDIO OFF</span>
               </>
             )}
@@ -482,14 +506,14 @@ export default function BikeSpeedometerGauge({
             onClick={() => setSpeedUnit(prev => prev === 'KM/H' ? 'MPH' : 'KM/H')}
             title="Switch speed unit between KM/H and MPH"
           >
-            <Sliders className="w-3.5 h-3.5 text-sky-600 mr-1" />
+            <Sliders className="w-3.5 h-3.5 text-sky-600 mr-1 shrink-0" />
             <span>{speedUnit}</span>
           </button>
 
           <div className="cockpit-stage-counter light-stage-counter">
-            <span className="text-slate-500 text-xs">STAGE</span>
-            <strong className="text-sky-700 text-sm font-mono ml-1">{currentStageIndex + 1}</strong>
-            <span className="text-slate-400 text-xs">/{totalStages}</span>
+            <span className="text-slate-500 text-[11px] font-bold">STAGE</span>
+            <strong className="text-sky-700 text-xs sm:text-sm font-mono ml-1">{currentStageIndex + 1}</strong>
+            <span className="text-slate-400 text-[11px]">/{totalStages}</span>
           </div>
         </div>
       </div>
@@ -847,7 +871,7 @@ export default function BikeSpeedometerGauge({
 
         {/* Scan In Progress Banner */}
         {isScanning && !complete && (
-          <div className="rev-limit-banner" style={{ border: '1px solid #38bdf8', color: '#0369a1', background: 'rgba(240, 249, 255, 0.95)', padding: '6px 14px', borderRadius: '0px', fontSize: '11px', fontWeight: 800, letterSpacing: '0.05em' }}>
+          <div className="rev-limit-banner" style={{ border: '1px solid #bae6fd', color: '#0369a1', background: 'rgba(240, 249, 255, 0.95)', padding: '8px 16px', borderRadius: '10px', fontSize: '11px', fontWeight: 800, letterSpacing: '0.04em' }}>
             <Activity className="w-4 h-4 inline mr-2 text-sky-600 animate-pulse" />
             AUDIT IN PROGRESS • STAGE {currentStageIndex + 1}/{totalStages}: {currentStageName}
           </div>
@@ -855,7 +879,7 @@ export default function BikeSpeedometerGauge({
 
         {/* Idle Standby Banner */}
         {!isScanning && !complete && (
-          <div className="rev-limit-banner" style={{ border: '1px solid #e2e8f0', color: '#64748b', background: '#f8fafc', padding: '6px 14px', borderRadius: '0px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em' }}>
+          <div className="rev-limit-banner" style={{ border: '1px solid #e2e8f0', color: '#64748b', background: '#f8fafc', padding: '8px 16px', borderRadius: '10px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.04em' }}>
             <ShieldCheck className="w-4 h-4 inline mr-2 text-emerald-600" />
             TELEMETRY CLUSTER READY • ENTER TARGET DOMAIN TO COMMENCE AUDIT
           </div>
@@ -863,12 +887,12 @@ export default function BikeSpeedometerGauge({
 
         {/* Stitch Precision HUD Readout */}
         <div style={{ textAlign: 'center', marginTop: '20px', marginBottom: '16px', position: 'relative', zIndex: 2, width: '100%', maxWidth: '540px' }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '3rem', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(2.4rem, 6vw, 3rem)', fontWeight: 900, color: '#0f172a', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
             {displayScore} <span style={{ fontSize: '1.4rem', color: '#94a3b8', fontWeight: 600 }}>/ 100</span>
           </div>
           <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
-            <span className="stitch-badge stitch-badge-secure" style={{ fontSize: '12px', padding: '4px 12px', display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
-              <span style={{ width: '6px', height: '6px', background: '#065f46', display: 'inline-block', marginRight: '8px', flexShrink: 0 }} />
+            <span className="stitch-badge stitch-badge-secure" style={{ fontSize: '12px', padding: '5px 14px', borderRadius: '20px', display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#059669', display: 'inline-block', marginRight: '8px', flexShrink: 0 }} />
               {ratingBadge}
             </span>
           </div>
@@ -877,9 +901,9 @@ export default function BikeSpeedometerGauge({
           </div>
         </div>
 
-        {/* Stitch Secondary Digital Odometer / Trip-Meter Box */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', borderTop: '1px solid #e2e8f0', paddingTop: '16px', textAlign: 'center', width: '100%', maxWidth: '640px', margin: '0 auto' }}>
-          <div style={{ border: '1px solid #cbd5e1', background: '#ffffff', padding: '12px 10px', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
+        {/* Secondary Digital Odometer / Trip-Meter Box */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', borderTop: '1px solid #e2e8f0', paddingTop: '16px', textAlign: 'center', width: '100%', maxWidth: '640px', margin: '0 auto' }}>
+          <div style={{ border: '1px solid #e2e8f0', background: '#ffffff', padding: '12px 10px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '1.35rem', fontWeight: 800, color: '#0f172a' }}>
               195
             </div>
@@ -887,7 +911,7 @@ export default function BikeSpeedometerGauge({
               Endpoints Cataloged
             </div>
           </div>
-          <div style={{ border: '1px solid #cbd5e1', background: '#ffffff', padding: '12px 10px', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
+          <div style={{ border: '1px solid #e2e8f0', background: '#ffffff', padding: '12px 10px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '1.35rem', fontWeight: 800, color: '#0284c7' }}>
               142ms
             </div>
@@ -895,8 +919,8 @@ export default function BikeSpeedometerGauge({
               Avg Probe Latency
             </div>
           </div>
-          <div style={{ border: '1px solid #cbd5e1', background: '#ffffff', padding: '12px 10px', boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '1.35rem', fontWeight: 800, color: '#065f46' }}>
+          <div style={{ border: '1px solid #e2e8f0', background: '#ffffff', padding: '12px 10px', borderRadius: '12px', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '1.35rem', fontWeight: 800, color: '#059669' }}>
               0 LEAKS
             </div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', textTransform: 'uppercase', color: '#64748b', letterSpacing: '0.05em', marginTop: '2px' }}>

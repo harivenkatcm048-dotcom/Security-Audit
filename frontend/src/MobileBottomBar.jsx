@@ -122,15 +122,13 @@ export default function MobileBottomBar({
           aria-label="Member Account"
         >
           {currentUser ? (
-            <div className="w-5 h-5 bg-sky-600 text-white font-bold text-[10px] flex items-center justify-center rounded-full">
+            <div className="w-5 h-5 bg-gradient-to-tr from-sky-600 to-indigo-600 text-white font-bold text-[10px] flex items-center justify-center rounded-full shadow-2xs">
               {currentUser.username ? currentUser.username[0].toUpperCase() : 'U'}
             </div>
           ) : (
             <User className="w-5 h-5 mobile-tab-icon" />
           )}
-          <span className="mobile-tab-label">
-            {currentUser ? currentUser.username.slice(0, 5) : 'Member'}
-          </span>
+          <span className="mobile-tab-label">Account</span>
           {currentUser && <span className="mobile-tab-dot-online" />}
         </button>
       </div>

@@ -402,18 +402,34 @@ function handleRunAudit(req, res, targetUrl, authorized = true, options = {}) {
 
 /**
  * Handle listing member-scoped historical reports
-/**
- * Handle listing member-scoped historical reports
- * Requirement: Query strictly from MongoDB Atlas database
+ * Requirement: Query strictly from MongoDB Atlas database, filtered by member name and/or email.
+ * If neither name nor email is provided, return an empty array.
  */
-async function handleListReports(req, res, userEmailQuery = null) {
+async function handleListReports(req, res, userEmailQuery = null, userNameQuery = null) {
   const cleanEmail = (userEmailQuery || '').toLowerCase().trim();
+  const cleanName = (userNameQuery || '').trim();
   const reportsList = [];
+
+  // Member-scoped restriction: If neither email nor name is provided, return empty list!
+  if (!cleanEmail && !cleanName) {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify([]));
+  }
 
   // Query strictly from MongoDB Atlas
   if (isMongoReady && auditsCol) {
     try {
-      const query = cleanEmail ? { userEmail: cleanEmail } : {};
+      const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const conditions = [];
+
+      if (cleanEmail) {
+        conditions.push({ userEmail: { $regex: new RegExp(`^${escapeRegex(cleanEmail)}$`, 'i') } });
+      }
+      if (cleanName) {
+        conditions.push({ userName: { $regex: new RegExp(`^${escapeRegex(cleanName)}$`, 'i') } });
+      }
+
+      const query = conditions.length > 1 ? { $or: conditions } : conditions[0];
       const docs = await auditsCol.find(
         query,
         { projection: { report: 0 } }
@@ -616,10 +632,11 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 4. List Reports (Filtered by authenticated member)
+  // 4. List Reports (Filtered strictly by member email and/or name)
   if (pathname === '/api/reports' && req.method === 'GET') {
     const userEmailQuery = reqUrl.searchParams.get('userEmail') || reqUrl.searchParams.get('email');
-    return handleListReports(req, res, userEmailQuery);
+    const userNameQuery = reqUrl.searchParams.get('userName') || reqUrl.searchParams.get('username') || reqUrl.searchParams.get('name');
+    return handleListReports(req, res, userEmailQuery, userNameQuery);
   }
 
   // 5. Get Report by Filename or MongoDB ID

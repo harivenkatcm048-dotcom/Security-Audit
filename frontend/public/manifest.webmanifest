@@ -1,7 +1,7 @@
 {
-  "name": "Website Audit by Nexentra Technologies",
-  "short_name": "Nexentra Audit",
-  "description": "Enterprise Security Audit of Website & Frontend Audit by Nexentra Technologies",
+  "name": "Website Audit, SEO Optimizer & Performance Audit",
+  "short_name": "Nexentra SEO",
+  "description": "Free real-time website audit, SEO optimizer, and Core Web Vitals performance audit by Nexentra Technologies.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",

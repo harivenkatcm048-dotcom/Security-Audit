@@ -5,7 +5,8 @@ import FrontendAuditPanels from './FrontendAuditPanels';
 import ApiInventoryPanel from './ApiInventoryPanel';
 import SiteFooter from './SiteFooter';
 import MobileBottomBar from './MobileBottomBar';
-import { AboutPage, PrivacyPolicyPage, TermsPage, SecurityPolicyPage } from './LegalAndInfoPages';
+import { AboutPage, PrivacyPolicyPage, TermsPage, SecurityPolicyPage, ContactPage } from './LegalAndInfoPages';
+import PublicKnowledgeBase from './PublicKnowledgeBase';
 import { API_BASE } from './apiConfig';
 import {
   Shield,
@@ -625,6 +626,18 @@ function LandingView({
           </div>
         )}
       </section>
+
+      {/* 7. SUBSTANTIAL PUBLIC KNOWLEDGE BASE & EDUCATIONAL FRAMEWORK (FOR VISITORS & SEARCH/ADSENSE BOTS) */}
+      <PublicKnowledgeBase 
+        onNavigateCapability={onNavigateCapability} 
+        onOpenScan={() => {
+          const el = document.getElementById('targetDomain') || document.getElementById('landing-target-input');
+          if (el) {
+            el.focus();
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      />
     </div>
   );
 }
@@ -758,6 +771,10 @@ export default function App() {
       title = 'Privacy Policy & Data Security Trust | Nexentra Technologies';
       description = 'Nexentra Technologies Privacy Policy: 100% passive security telemetry, MongoDB Atlas isolation, and zero unauthorized data harvesting.';
       canonical = 'https://security.nexentra.space/#privacy';
+    } else if (viewMode === 'contact') {
+      title = 'Contact Us — Support & Technical Inquiries | Nexentra Technologies';
+      description = 'Contact Nexentra Technologies support, security vulnerability reporting, and enterprise API inquiries for security.nexentra.space.';
+      canonical = 'https://security.nexentra.space/#contact';
     } else if (viewMode === 'terms') {
       title = 'Terms of Service — Website Audit & Performance Telemetry | Nexentra';
       description = 'Terms of Service for Nexentra Technologies cyber defense platform, automated website auditing, and API discovery tools.';
@@ -791,11 +808,12 @@ export default function App() {
     }
   }, [viewMode, activeReport, domainInput]);
 
-  // URL Query Params & Hash Routing Support on Mount (?domain=... & #about, #privacy)
+  // URL Query Params & Hash Routing Support on Mount (?domain=... & #about, #privacy, #contact)
   useEffect(() => {
     try {
       const hash = window.location.hash;
       if (hash === '#about') setViewMode('about');
+      else if (hash === '#contact') setViewMode('contact');
       else if (hash === '#privacy') setViewMode('privacy');
       else if (hash === '#terms') setViewMode('terms');
       else if (hash === '#security_policy') setViewMode('security_policy');
@@ -1245,7 +1263,7 @@ export default function App() {
   };
 
   const handleNavigatePage = (page) => {
-    if (['about', 'privacy', 'terms', 'security_policy'].includes(page)) {
+    if (['about', 'contact', 'privacy', 'terms', 'security_policy'].includes(page)) {
       setViewMode(page);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -1288,7 +1306,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Center: Navigation Links - Home, About Us, Privacy & Trust */}
+        {/* Center: Navigation Links - Home, About Us, Contact Us, Privacy & Trust */}
         <nav className="nav-links-center" aria-label="Main Navigation">
           <button 
             type="button"
@@ -1304,6 +1322,14 @@ export default function App() {
             onClick={() => { setViewMode('about'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           >
             About Us
+          </button>
+
+          <button 
+            type="button"
+            className={`nav-link-item ${viewMode === 'contact' ? 'active' : ''}`}
+            onClick={() => { setViewMode('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          >
+            Contact Us
           </button>
 
           <button 
@@ -1380,6 +1406,13 @@ export default function App() {
             onClick={() => { setViewMode('about'); setIsMobileNavOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           >
             About Us
+          </button>
+          <button 
+            type="button"
+            className={`nav-mobile-link ${viewMode === 'contact' ? 'active' : ''}`}
+            onClick={() => { setViewMode('contact'); setIsMobileNavOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          >
+            Contact Us
           </button>
           <button 
             type="button"
@@ -1532,6 +1565,12 @@ export default function App() {
       {viewMode === 'about' && (
         <main className="dashboard-container">
           <AboutPage onBack={() => { setViewMode('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+        </main>
+      )}
+
+      {viewMode === 'contact' && (
+        <main className="dashboard-container">
+          <ContactPage onBack={() => { setViewMode('landing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
         </main>
       )}
 

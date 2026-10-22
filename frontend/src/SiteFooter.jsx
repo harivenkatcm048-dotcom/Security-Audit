@@ -118,8 +118,13 @@ export default function SiteFooter({ onNavigatePage = () => {} }) {
                 </button>
               </li>
               <li>
+                <button type="button" onClick={() => onNavigatePage('contact')} className="hover:text-sky-600 transition-colors text-left font-bold text-slate-800 cursor-pointer">
+                  Contact Us
+                </button>
+              </li>
+              <li>
                 <button type="button" onClick={() => onNavigatePage('privacy')} className="hover:text-slate-900 transition-colors text-left cursor-pointer">
-                  Privacy Policy
+                  Privacy Policy &amp; Cookies
                 </button>
               </li>
               <li>
